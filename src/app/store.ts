@@ -1,19 +1,18 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import counterReducer from '../features/counter/counterSlice';
-import publishersReducer from '../features/publishers/publisherSlice';
+import publishersReducer, { publishersApiSlice } from '../features/publishers/publisherSlice';
+import { apiSlice } from '../features/api/apiSlice';
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
-    publishers: publishersReducer
+    publishers: publishersReducer,
+    [apiSlice.reducerPath]: apiSlice.reducer,
+    [publishersApiSlice.reducerPath]: publishersApiSlice.reducer
   },
 });
 
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;
-export type AppThunk<ReturnType = void> = ThunkAction<
-  ReturnType,
+export type AppThunk<ReturnType = void> = ThunkAction<ReturnType,
   RootState,
   unknown,
-  Action<string>
->;
+  Action<string>>;

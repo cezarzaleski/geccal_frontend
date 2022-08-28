@@ -1,5 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
+import { apiSlice } from '../../features/api/apiSlice';
+import { Results } from '../../types/publisher';
 
 export interface Publisher {
   id: string;
@@ -10,6 +12,27 @@ export interface Publisher {
   created_at: string;
   updated_at: string;
 }
+
+const endpointUrl = '/publishers'
+function deletePublisherMutation(publisher: Publisher) {
+  return {
+    url: `${endpointUrl}/${publisher.id}`,
+    method: 'DELETE'
+  }
+}
+export const publishersApiSlice = apiSlice.injectEndpoints({
+  endpoints: ({query, mutation}) => ({
+    getPublishers: query<Results, void>({
+      query: () => `${endpointUrl}`,
+      providesTags: ['Publishers']
+    }),
+    deletePublisher: mutation<any, {id: string}>({
+      query: deletePublisherMutation,
+      invalidatesTags: ['Publishers']
+    })
+  })
+
+})
 
 
 const publisher: Publisher = {
@@ -68,3 +91,7 @@ export const selectPublishersById = (state: RootState, id: string) => {
 
 export default publishersSlice.reducer
 export const { createPublisher, updatePublisher, deletePublisher } = publishersSlice.actions
+export const  {
+  useGetPublishersQuery,
+  useDeletePublisherMutation
+} = publishersApiSlice

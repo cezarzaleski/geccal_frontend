@@ -1,29 +1,38 @@
 import { Box, Button, IconButton, Typography } from '@mui/material';
-import React from 'react';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { deletePublisher, selectPublishers } from './publisherSlice';
+import React, { useEffect } from 'react';
+import { useAppDispatch } from '../../app/hooks';
+import { deletePublisher, useGetPublishersQuery, useDeletePublisherMutation } from './publisherSlice';
 import { Link } from 'react-router-dom';
 import { DataGrid, GridColDef, GridRenderCellParams, GridRowsProp, GridToolbar } from '@mui/x-data-grid';
 import { Delete } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
 
 export const PublisherList = () => {
-  const publishers = useAppSelector(selectPublishers)
+  const {data, isFetching, error} = useGetPublishersQuery()
+  const [deletePublisher, deletePublisherStatus] = useDeletePublisherMutation()
   const dispatch = useAppDispatch()
   const { enqueueSnackbar } = useSnackbar()
 
-  function handleDeletePublisher(id: string) {
-    dispatch(deletePublisher(id))
-    enqueueSnackbar('Editora removida com sucesso!', {variant: 'success'})
+  async function handleDeletePublisher(id: string) {
+    await deletePublisher({id})
   }
 
-  const rows: GridRowsProp = publishers.map((publisher) => ({
+  useEffect(() => {
+    console.log(deletePublisherStatus)
+    if (deletePublisherStatus.isSuccess) {
+      enqueueSnackbar('Editora removida com sucesso!', {variant: 'success'})
+    }
+    if (deletePublisherStatus.error) {
+      enqueueSnackbar('Editora não removida', {variant: 'error'})
+    }
+  }, [deletePublisherStatus])
+
+  const rows: GridRowsProp = data ? data?.items.map((publisher) => ({
     id: publisher.id,
     name: publisher.name,
-    description: publisher.description,
-    isActive: publisher.is_active,
-    createdAt: new Date(publisher.created_at).toLocaleDateString('pt-br')
-  }));
+    isActive: true,
+    createdAt: new Date(publisher.createdAt).toLocaleDateString('pt-br')
+  })) : [];
 
   const componentProps = {
     toolbar: {
