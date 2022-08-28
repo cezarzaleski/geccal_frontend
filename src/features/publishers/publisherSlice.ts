@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import { apiSlice } from '../../features/api/apiSlice';
-import { Results } from '../../types/publisher';
+import { PublisherParams, Results } from '../../types/publisher';
 
 export interface Publisher {
   id: string;
@@ -14,6 +14,20 @@ export interface Publisher {
 }
 
 const endpointUrl = '/publishers'
+function parseQueryParams(params: PublisherParams) {
+  const query = new URLSearchParams()
+  if (params?.page) query.append('page', params.page.toString())
+  if (params?.perPage) query.append('perPage', params.perPage.toString())
+  if (params?.search) query.append('search', params.search.toString())
+  if (params?.isActive) query.append('page', params.isActive.toString())
+  return query
+}
+
+function getPublishers({page = 1, perPage = 10, search = ''}) {
+  const params = {page, perPage, search, isActive: true}
+  return `${endpointUrl}?${parseQueryParams(params)}`
+}
+
 function deletePublisherMutation(publisher: Publisher) {
   return {
     url: `${endpointUrl}/${publisher.id}`,
@@ -22,8 +36,8 @@ function deletePublisherMutation(publisher: Publisher) {
 }
 export const publishersApiSlice = apiSlice.injectEndpoints({
   endpoints: ({query, mutation}) => ({
-    getPublishers: query<Results, void>({
-      query: () => `${endpointUrl}`,
+    getPublishers: query<Results, PublisherParams>({
+      query: getPublishers,
       providesTags: ['Publishers']
     }),
     deletePublisher: mutation<any, {id: string}>({
@@ -73,8 +87,6 @@ const publishersSlice = createSlice({
     },
   }
 })
-
-export const selectPublishers = (state: RootState) => state.publishers
 export const selectPublishersById = (state: RootState, id: string) => {
   const publisher = state.publishers.find(it => it.id == id)
   if (!publisher) return {
@@ -90,7 +102,7 @@ export const selectPublishersById = (state: RootState, id: string) => {
 }
 
 export default publishersSlice.reducer
-export const { createPublisher, updatePublisher, deletePublisher } = publishersSlice.actions
+export const { createPublisher, updatePublisher } = publishersSlice.actions
 export const  {
   useGetPublishersQuery,
   useDeletePublisherMutation

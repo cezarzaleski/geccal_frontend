@@ -11,3 +11,10 @@ export interface Results {
   lastPage: number;
   perPage: number;
 }
+
+export interface PublisherParams {
+  page?: number;
+  perPage?: number;
+  search?: string;
+  isActive?: boolean
+}

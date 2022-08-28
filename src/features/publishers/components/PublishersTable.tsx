@@ -1,18 +1,26 @@
-import { GridColDef, GridRenderCellParams, GridRowsProp } from '@mui/x-data-grid';
-import { IconButton, Typography } from '@mui/material';
+import {
+  DataGrid,
+  GridColDef,
+  GridFilterModel,
+  GridRenderCellParams,
+  GridRowsProp,
+  GridToolbar
+} from '@mui/x-data-grid';
+import { Box, IconButton, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { Delete } from '@mui/icons-material';
 import React from 'react';
+import { Results } from '../../../types/publisher';
 
 type Props = {
-  data: any;
+  data: Results | undefined;
   perPage: number;
   isFetching: boolean;
-  rowsPerPage?: number;
+  rowsPerPage?: number[];
   handleOnPageChange: (page: number) => void;
-  handleFilterChange: (page: number) => void;
-  handleOnPageSizeChange: (page: number) => void;
-  handleDelete: (id: number) => void
+  handleFilterChange: (filterModel: GridFilterModel) => void;
+  handleOnPageSizeChange: (perPage: number) => void;
+  handleDelete: (id: string) => void
 }
 
 export function PublishersTable({
@@ -27,14 +35,14 @@ export function PublishersTable({
 
 }: Props) {
 
-  function mapDataToGridRows(data: any) {
-    const { data: publishers } = data
-    // return publishers.map(publisher: any => ({
-    //   id: publisher.id
-    //   id: publisher.id
-    //   id: publisher.id
-    //   id: publisher.id
-    // }))
+  function mapDataToGridRows(data: Results) {
+    const { items: publishers } = data
+    return publishers.map((publisher) => ({
+      id: publisher.id,
+      name: publisher.name,
+      isActive: true,
+      createdAt: publisher.createdAt,
+    }))
   }
 
   const componentProps = {
@@ -108,12 +116,31 @@ export function PublishersTable({
 
   }
 
-  // const rows: GridRowsProp = publishers.map((publisher) => ({
-  //   id: publisher.id,
-  //   name: publisher.name,
-  //   description: publisher.description,
-  //   isActive: publisher.is_active,
-  //   createdAt: new Date(publisher.created_at).toLocaleDateString('pt-br')
-  // }));
+  const rows = data ? mapDataToGridRows(data) : []
+  const rowCount = data?.total
 
+  return (
+    <Box sx={{ display: 'flex', height: 600 }}>
+      <DataGrid
+        columns={columns}
+        rows={rows}
+        componentsProps={componentProps}
+        pageSize={perPage}
+        filterMode={'server'}
+        paginationMode={'server'}
+        loading={isFetching}
+        rowCount={rowCount}
+        disableColumnFilter={true}
+        disableColumnSelector={true}
+        disableDensitySelector={true}
+        disableSelectionOnClick={true}
+        components={{Toolbar: GridToolbar}}
+        onPageChange={handleOnPageChange}
+        onPageSizeChange={handleOnPageSizeChange}
+        onFilterModelChange={handleFilterChange}
+        checkboxSelection={false}
+        rowsPerPageOptions={rowsPerPage}
+      />
+    </Box>
+  )
 }

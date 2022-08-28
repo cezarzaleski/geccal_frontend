@@ -1,20 +1,41 @@
-import { Box, Button, IconButton, Typography } from '@mui/material';
-import React, { useEffect } from 'react';
-import { useAppDispatch } from '../../app/hooks';
-import { deletePublisher, useGetPublishersQuery, useDeletePublisherMutation } from './publisherSlice';
+import { Box, Button } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { useDeletePublisherMutation, useGetPublishersQuery } from './publisherSlice';
 import { Link } from 'react-router-dom';
-import { DataGrid, GridColDef, GridRenderCellParams, GridRowsProp, GridToolbar } from '@mui/x-data-grid';
-import { Delete } from '@mui/icons-material';
+import { GridFilterModel } from '@mui/x-data-grid';
 import { useSnackbar } from 'notistack';
+import { PublishersTable } from './components/PublishersTable';
 
 export const PublisherList = () => {
-  const {data, isFetching, error} = useGetPublishersQuery()
-  const [deletePublisher, deletePublisherStatus] = useDeletePublisherMutation()
-  const dispatch = useAppDispatch()
-  const { enqueueSnackbar } = useSnackbar()
+  const {enqueueSnackbar} = useSnackbar()
+  const [rowsPerPage] = useState([2, 4, 6]);
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(2);
+  const [search, setSearch] = useState('');
 
+  const options = {perPage, search, page}
+
+
+  const {data, isFetching, error} = useGetPublishersQuery(options)
+  const [deletePublisher, deletePublisherStatus] = useDeletePublisherMutation()
   async function handleDeletePublisher(id: string) {
     await deletePublisher({id})
+  }
+
+  function handleOnPageChange(page: number) {
+    setPage(page + 1)
+  }
+
+  function handleOnPageSizeChange(pearPage: number) {
+    setPerPage(pearPage)
+  }
+
+  function handleFilterChange(filterModel: GridFilterModel) {
+    let search = ''
+    if (filterModel.quickFilterValues?.length) {
+      search = filterModel.quickFilterValues.join('')
+    }
+    return setSearch(search)
   }
 
   useEffect(() => {
@@ -26,84 +47,6 @@ export const PublisherList = () => {
       enqueueSnackbar('Editora não removida', {variant: 'error'})
     }
   }, [deletePublisherStatus])
-
-  const rows: GridRowsProp = data ? data?.items.map((publisher) => ({
-    id: publisher.id,
-    name: publisher.name,
-    isActive: true,
-    createdAt: new Date(publisher.createdAt).toLocaleDateString('pt-br')
-  })) : [];
-
-  const componentProps = {
-    toolbar: {
-      showQuickFilter: true,
-      quickFilterProps: {debounceMs: 500}
-    }
-  }
-
-  const columns: GridColDef[] = [
-    {
-      field: 'name',
-      headerName: 'name',
-      flex: 1,
-      renderCell: renderNameCell
-    },
-    {
-      field: 'description',
-      headerName: 'Description',
-      flex: 1
-    },
-    {
-      field: 'isActive',
-      headerName: 'Active',
-      flex: 1,
-      renderCell: renderIsActiveCel
-    },
-    {
-      field: 'createdAt',
-      headerName: 'Created At',
-      flex: 1
-    },
-    {
-      field: 'id',
-      headerName: 'Actions',
-      type: 'string',
-      flex: 1,
-      renderCell: renderActionsCel
-    }
-  ];
-
-  function renderIsActiveCel(rowData: GridRenderCellParams) {
-    return (
-      <Typography color={rowData.value ? 'primary' : 'secondary'}>
-        {rowData.value ? 'Active' : 'Inactive'}
-      </Typography>
-    )
-  }
-
-  function renderNameCell(rowData: GridRenderCellParams) {
-    return (
-      <Link
-        style={{textDecoration: 'none'}}
-        to={`/publishers/edit/${rowData.id}`}
-      >
-        <Typography color="primary">{rowData.value}</Typography>
-      </Link>
-    )
-  }
-
-  function renderActionsCel(params: GridRenderCellParams) {
-    return (
-      <IconButton
-        color="secondary"
-        onClick={() => handleDeletePublisher(params.value)}
-        aria-label="delete"
-      >
-        <Delete></Delete>
-      </IconButton>
-    )
-
-  }
 
   return (
     <Box maxWidth="lg" sx={{mt: 4, mb: 4}}>
@@ -118,19 +61,15 @@ export const PublisherList = () => {
           Nova Editora
         </Button>
       </Box>
-      <Box sx={{display: 'flex', height: 600}}>
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          disableColumnFilter={true}
-          disableColumnSelector={true}
-          disableDensitySelector={true}
-          disableSelectionOnClick={true}
-          componentsProps={componentProps}
-          components={{Toolbar: GridToolbar}}
-          rowsPerPageOptions={[2, 20, 50, 100]}
-        />
-      </Box>
+      <PublishersTable
+        data={data}
+        isFetching={isFetching}
+        perPage={perPage}
+        rowsPerPage={rowsPerPage}
+        handleDelete={handleDeletePublisher}
+        handleOnPageChange={handleOnPageChange}
+        handleOnPageSizeChange={handleOnPageSizeChange}
+        handleFilterChange={handleFilterChange}/>
     </Box>
   )
 }
