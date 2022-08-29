@@ -12,11 +12,10 @@ export const PublisherCreate = () => {
   const [publisher, setPublisher] = useState<Publisher>({
     id: '',
     name: '',
-    description: '',
-    is_active: true,
-    deleted_at: null,
-    created_at: '',
-    updated_at: ''
+    active: true,
+    deletedAt: '',
+    createdAt: '',
+    updatedAt: ''
 
   })
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {

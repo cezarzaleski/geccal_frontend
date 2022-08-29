@@ -60,11 +60,6 @@ export function PublishersTable({
       renderCell: renderNameCell
     },
     {
-      field: 'description',
-      headerName: 'Description',
-      flex: 1
-    },
-    {
       field: 'isActive',
       headerName: 'Active',
       flex: 1,

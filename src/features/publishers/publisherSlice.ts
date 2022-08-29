@@ -6,11 +6,10 @@ import { PublisherParams, Results } from '../../types/publisher';
 export interface Publisher {
   id: string;
   name: string;
-  description: string | null;
-  is_active: boolean;
-  deleted_at: null | string;
-  created_at: string;
-  updated_at: string;
+  active: boolean;
+  deletedAt: null | string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 const endpointUrl = '/publishers'
@@ -18,7 +17,7 @@ function parseQueryParams(params: PublisherParams) {
   const query = new URLSearchParams()
   if (params?.page) query.append('page', params.page.toString())
   if (params?.perPage) query.append('perPage', params.perPage.toString())
-  if (params?.search) query.append('search', params.search.toString())
+  if (params?.search) query.append('filter', params.search.toString())
   if (params?.isActive) query.append('page', params.isActive.toString())
   return query
 }
@@ -52,11 +51,10 @@ export const publishersApiSlice = apiSlice.injectEndpoints({
 const publisher: Publisher = {
   id: "1",
   name: "Name",
-  description: "description",
-  is_active: true,
-  deleted_at: null,
-  created_at: "2022-08-15T10:59:09+0000",
-  updated_at: "2022-08-15T10:59:09+0000"
+  active: true,
+  deletedAt: null,
+  createdAt: "2022-08-15T10:59:09+0000",
+  updatedAt: "2022-08-15T10:59:09+0000"
 }
 
 export const initialState = [
@@ -92,11 +90,10 @@ export const selectPublishersById = (state: RootState, id: string) => {
   if (!publisher) return {
     id: '',
     name: '',
-    description: '',
-    is_active: true,
-    deleted_at: null,
-    created_at: '',
-    updated_at: ''
+    active: true,
+    deletedAt: null,
+    createdAt: '',
+    updatedAt: ''
   }
   return publisher
 }

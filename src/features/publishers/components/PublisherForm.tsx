@@ -43,14 +43,14 @@ export function PublisherForm({
           <FormControlLabel
             control={
               <Switch
-                name="is_active"
+                name="active"
                 color="secondary"
                 onChange={handleToggle}
-                checked={publisher?.is_active}
+                checked={publisher?.active}
                 inputProps={{"aria-label": "controlle"}}
               />
             }
-            label="Active"
+            label="Ativo"
           />
         </FormGroup>
       </Grid>
