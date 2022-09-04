@@ -9,6 +9,7 @@ import { PublisherList } from './features/publishers/ListPublisher';
 import { PublisherCreate } from './features/publishers/CreatePublisher';
 import { PublisherEdit } from './features/publishers/EditPublisher';
 import { SnackbarProvider } from 'notistack'
+import { BookCreate } from './features/books/CreateBook';
 
 function App() {
   return (
@@ -35,6 +36,9 @@ function App() {
               <Route path="/publishers" element={<PublisherList/>}/>
               <Route path="/publishers/create" element={<PublisherCreate/>}/>
               <Route path="/publishers/edit/:id" element={<PublisherEdit/>}/>
+              <Route path="/books" element={<PublisherList/>}/>
+              <Route path="/books/create" element={<BookCreate/>}/>
+              <Route path="/books/edit/:id" element={<PublisherEdit/>}/>
               <Route
                 path="*"
                 element={
