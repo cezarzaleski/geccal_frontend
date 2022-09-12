@@ -40,7 +40,7 @@ export function PublishersTable({
     return publishers.map((publisher) => ({
       id: publisher.id,
       name: publisher.name,
-      isActive: true,
+      isActive: publisher.active,
       createdAt: publisher.createdAt,
     }))
   }
@@ -55,24 +55,24 @@ export function PublishersTable({
   const columns: GridColDef[] = [
     {
       field: 'name',
-      headerName: 'name',
+      headerName: 'Nome',
       flex: 1,
       renderCell: renderNameCell
     },
     {
       field: 'isActive',
-      headerName: 'Active',
+      headerName: 'Ativo',
       flex: 1,
       renderCell: renderIsActiveCel
     },
     {
       field: 'createdAt',
-      headerName: 'Created At',
+      headerName: 'Criado em',
       flex: 1
     },
     {
       field: 'id',
-      headerName: 'Actions',
+      headerName: 'Ações',
       type: 'string',
       flex: 1,
       renderCell: renderActionsCel
@@ -82,7 +82,7 @@ export function PublishersTable({
   function renderIsActiveCel(rowData: GridRenderCellParams) {
     return (
       <Typography color={rowData.value ? 'primary' : 'secondary'}>
-        {rowData.value ? 'Active' : 'Inactive'}
+        {rowData.value ? 'Ativo' : 'Inativo'}
       </Typography>
     )
   }

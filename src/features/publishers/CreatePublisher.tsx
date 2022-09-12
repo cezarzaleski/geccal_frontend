@@ -1,13 +1,12 @@
 import { Box, Paper, Typography } from '@mui/material';
-import React, { useState } from 'react';
-import { createPublisher, Publisher } from '../../features/publishers/publisherSlice';
+import React, { useEffect, useState } from 'react';
+import { Publisher, useCreatePublisherMutation } from '../../features/publishers/publisherSlice';
 import { PublisherForm } from './components/PublisherForm';
-import { useAppDispatch } from '../../app/hooks';
 import { useSnackbar } from 'notistack';
 
 export const PublisherCreate = () => {
   const [isDisabled, setIsDisabled] = useState(false);
-  const dispatch = useAppDispatch()
+  const [createPublisher, status] = useCreatePublisherMutation()
   const { enqueueSnackbar } = useSnackbar()
   const [publisher, setPublisher] = useState<Publisher>({
     id: '',
@@ -20,8 +19,7 @@ export const PublisherCreate = () => {
   })
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    dispatch(createPublisher(publisher))
-    enqueueSnackbar('Editora criada com sucesso!', {variant: 'success'})
+    await createPublisher(publisher)
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,6 +30,17 @@ export const PublisherCreate = () => {
     const {name, checked} = e.target
     setPublisher({...publisher, [name]: checked})
   };
+
+  useEffect(() => {
+    if (status.isSuccess) {
+      enqueueSnackbar('Editora criada com sucesso', {variant: 'success'})
+      setIsDisabled(true)
+    }
+    if (status.error) {
+      enqueueSnackbar('Editora não criada', {variant: 'error'})
+    }
+  }, [enqueueSnackbar, status.error, status.isSuccess]);
+
   return (
     <Box>
       <Paper>

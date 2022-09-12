@@ -33,14 +33,46 @@ function deletePublisherMutation(publisher: Publisher) {
     method: 'DELETE'
   }
 }
+
+function createPublisherMutation(publisher: Publisher) {
+  return {
+    url: `${endpointUrl}`,
+    body: publisher,
+    method: 'POST'
+  }
+}
+
+function updatePublisherMutation(publisher: Publisher) {
+  return {
+    url: `${endpointUrl}/${publisher.id}`,
+    body: publisher,
+    method: 'PUT'
+  }
+}
+
+function getPublisher({id}: { id: string }) {
+  return `${endpointUrl}/${id}`
+}
 export const publishersApiSlice = apiSlice.injectEndpoints({
   endpoints: ({query, mutation}) => ({
     getPublishers: query<Results, PublisherParams>({
       query: getPublishers,
       providesTags: ['Publishers']
     }),
+    getPublisher: query<any, {id: string}>({
+      query: getPublisher,
+      providesTags: ['Publishers']
+    }),
     deletePublisher: mutation<any, {id: string}>({
       query: deletePublisherMutation,
+      invalidatesTags: ['Publishers']
+    }),
+    createPublisher: mutation<any, Publisher>({
+      query: createPublisherMutation,
+      invalidatesTags: ['Publishers']
+    }),
+    updatePublisher: mutation<any, Publisher>({
+      query: updatePublisherMutation,
       invalidatesTags: ['Publishers']
     })
   })
@@ -86,7 +118,7 @@ const publishersSlice = createSlice({
   }
 })
 export const selectPublishersById = (state: RootState, id: string) => {
-  const publisher = state.publishers.find(it => it.id == id)
+  const publisher = state.publishers.find(it => it.id === id)
   if (!publisher) return {
     id: '',
     name: '',
@@ -102,5 +134,8 @@ export default publishersSlice.reducer
 export const { createPublisher, updatePublisher } = publishersSlice.actions
 export const  {
   useGetPublishersQuery,
-  useDeletePublisherMutation
+  useDeletePublisherMutation,
+  useCreatePublisherMutation,
+  useUpdatePublisherMutation,
+  useGetPublisherQuery
 } = publishersApiSlice

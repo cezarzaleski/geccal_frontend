@@ -1,6 +1,7 @@
 export interface Publisher {
   id: string;
   name: string;
+  active: boolean;
   createdAt: Date;
 }
 

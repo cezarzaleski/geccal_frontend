@@ -1,23 +1,34 @@
 import { Box, Paper, Typography } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Publisher, selectPublishersById, updatePublisher } from './publisherSlice';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import {
+  Publisher,
+  useCreatePublisherMutation,
+  useGetPublisherQuery,
+  useUpdatePublisherMutation
+} from './publisherSlice';
 import { PublisherForm } from './components/PublisherForm';
 import { useSnackbar } from 'notistack';
 
 export const PublisherEdit = () => {
   const id = useParams().id || ''
   const [isDisabled, setIsDisabled] = useState(false);
-  const publisher = useAppSelector(state => selectPublishersById(state, id))
-  const [publisherState, setPublisherState] = useState<Publisher>(publisher);
-  const dispatch = useAppDispatch()
-  const { enqueueSnackbar } = useSnackbar()
+  const {data: publisher, isFetching} = useGetPublisherQuery({id})
+  const [updatePublisher, status] = useUpdatePublisherMutation()
+  const [publisherState, setPublisherState] = useState<Publisher>({
+    id: '',
+    name: '',
+    active: true,
+    deletedAt: '',
+    createdAt: '',
+    updatedAt: ''
+  });
+  const {enqueueSnackbar} = useSnackbar()
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    dispatch(updatePublisher(publisherState))
-    enqueueSnackbar('Editora atualizada com sucesso!', {variant: 'success'})
+    console.log(publisherState)
+    await updatePublisher(publisherState)
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,6 +39,23 @@ export const PublisherEdit = () => {
     const {name, checked} = e.target
     setPublisherState({...publisherState, [name]: checked})
   };
+
+  useEffect(() => {
+    if (publisher) {
+      setPublisherState(publisher)
+    }
+  }, [publisher]);
+
+  useEffect(() => {
+    if (status.isSuccess) {
+      enqueueSnackbar('Editora atualizada com sucesso', {variant: 'success'})
+      setIsDisabled(true)
+    }
+    if (status.error) {
+      enqueueSnackbar('Editora não atualziada', {variant: 'error'})
+    }
+  }, [enqueueSnackbar, status.error, status.isSuccess]);
+
   return (
     <Box>
       <Paper>
