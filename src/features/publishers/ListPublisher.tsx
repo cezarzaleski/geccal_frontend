@@ -1,4 +1,4 @@
-import { Box, Button } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useDeletePublisherMutation, useGetPublishersQuery } from './publisherSlice';
 import { Link } from 'react-router-dom';
@@ -8,9 +8,9 @@ import { PublishersTable } from './components/PublishersTable';
 
 export const PublisherList = () => {
   const {enqueueSnackbar} = useSnackbar()
-  const [rowsPerPage] = useState([2, 4, 6]);
+  const [rowsPerPage] = useState([10, 50, 100]);
   const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(2);
+  const [perPage, setPerPage] = useState(10);
   const [search, setSearch] = useState('');
 
   const options = {perPage, search, page}
@@ -39,7 +39,6 @@ export const PublisherList = () => {
   }
 
   useEffect(() => {
-    console.log(deletePublisherStatus)
     if (deletePublisherStatus.isSuccess) {
       enqueueSnackbar('Editora removida com sucesso!', {variant: 'success'})
     }
@@ -47,6 +46,14 @@ export const PublisherList = () => {
       enqueueSnackbar('Editora não removida', {variant: 'error'})
     }
   }, [deletePublisherStatus])
+
+  if(error) {
+    return <Typography>
+      Erro ao carregar as editoras
+    </Typography>
+  }
+
+
 
   return (
     <Box maxWidth="lg" sx={{mt: 4, mb: 4}}>
