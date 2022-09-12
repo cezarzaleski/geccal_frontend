@@ -12,7 +12,6 @@ import { useSnackbar } from 'notistack';
 
 export const PublisherEdit = () => {
   const id = useParams().id || ''
-  const [isDisabled, setIsDisabled] = useState(false);
   const {data: publisher, isFetching} = useGetPublisherQuery({id})
   const [updatePublisher, status] = useUpdatePublisherMutation()
   const [publisherState, setPublisherState] = useState<Publisher>({
@@ -27,7 +26,6 @@ export const PublisherEdit = () => {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    console.log(publisherState)
     await updatePublisher(publisherState)
   }
 
@@ -49,7 +47,6 @@ export const PublisherEdit = () => {
   useEffect(() => {
     if (status.isSuccess) {
       enqueueSnackbar('Editora atualizada com sucesso', {variant: 'success'})
-      setIsDisabled(true)
     }
     if (status.error) {
       enqueueSnackbar('Editora não atualziada', {variant: 'error'})
@@ -67,8 +64,8 @@ export const PublisherEdit = () => {
         <Box p={2}>
           <PublisherForm
             publisher={publisherState}
-            isDisabled={isDisabled}
-            isLoading={false}
+            isDisabled={status.isLoading}
+            isLoading={isFetching}
             handleSubmit={handleSubmit}
             handleChange={handleChange}
             handleToggle={handleToggle}
