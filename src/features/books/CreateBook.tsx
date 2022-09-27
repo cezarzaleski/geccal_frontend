@@ -6,7 +6,7 @@ import { useAppDispatch } from '../../app/hooks';
 import { useSnackbar } from 'notistack';
 
 export const BookCreate = () => {
-  const [isDisabled, setIsDisabled] = useState(false);
+  const [isDisabled] = useState(false);
   const dispatch = useAppDispatch()
   const { enqueueSnackbar } = useSnackbar()
   const [book, setBook] = useState<Book>({

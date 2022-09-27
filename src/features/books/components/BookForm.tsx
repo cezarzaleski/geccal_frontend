@@ -1,4 +1,5 @@
 import {
+  Autocomplete,
   Box,
   Button,
   FormControl,
@@ -6,16 +7,15 @@ import {
   FormGroup,
   Grid,
   Switch,
-  TextField,
-  styled,
-  Paper
+  TextField
 } from '@mui/material';
 import { Link } from 'react-router-dom';
-import React, { useState } from 'react';
+import React from 'react';
 import { Book } from '../../../features/books/bookSlice';
 import { MultiSelectAutocomplete } from '../../../components/MultiSelectAutocomplete';
+import { useGetPublishersQuery } from '../../publishers/publisherSlice';
 
-const authores = [
+const authors = [
   {title: 'Amadeus', id: '1984'},
   {title: 'To Kill a Mockingbird', id: '1962'},
   {title: 'Toy Story 3', id: '2010'},
@@ -44,24 +44,43 @@ type Props = {
   handleToggle: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-}));
 
 
+export function BookForm(
+  {
+    book,
+    isDisabled,
+    isLoading,
+    handleSubmit,
+    handleChange,
+    handleToggle
+  }: Props
+) {
+  const options = {perPage: 99999, search: '', page: 1}
+  const {data: dataPublishers} = useGetPublishersQuery(options)
+  const publishers = dataPublishers ? converterPublisher(dataPublishers) : []
+  function converterPublisher(data: any) {
+    const { items: publishers } = data
+    return publishers?.map((it: { name: any; id: any; }) => {
+      return {
+        label: it.name,
+        id: it.id
+      }
+    })
+  }
+  function getYears() {
+    const years = []
+    const now = new Date()
+    const start = now.getFullYear();
+    for (let i = start; i >= 1988; i--) {
+      years.push({
+        label: i,
+        id: i
+      })
+    }
+    return years
+  }
 
-export function BookForm({
-                                book,
-                                isDisabled,
-                                isLoading,
-                                handleSubmit,
-                                handleChange,
-                                handleToggle
-                              }: Props) {
   return (
     <form onSubmit={handleSubmit}>
       <Grid item xs={12}>
@@ -95,13 +114,20 @@ export function BookForm({
         <Grid item xs={6}>
           <Box mb={2}>
             <FormControl fullWidth>
-              <TextField
-                required
-                disabled={isDisabled}
-                value={book?.year}
-                onChange={handleChange}
-                name="year"
-                label="Ano"
+              <Autocomplete
+                disablePortal
+                options={getYears()}
+                renderInput={(params) =>
+                  <TextField
+                    {...params}
+                    required
+                    disabled={isDisabled}
+                    value={book?.year}
+                    onChange={handleChange}
+                    name="year"
+                    label="Ano"
+                  />
+                }
               />
             </FormControl>
           </Box>
@@ -125,13 +151,20 @@ export function BookForm({
         <Grid item xs={6}>
           <Box mb={2}>
             <FormControl fullWidth>
-              <TextField
-                required
-                disabled={isDisabled}
-                value={book?.publisherId}
-                onChange={handleChange}
-                name="publisherId"
-                label="Editora"
+              <Autocomplete
+                disablePortal
+                options={publishers}
+                renderInput={(params) =>
+                  <TextField
+                    {...params}
+                    required
+                    disabled={isDisabled}
+                    value={book?.publisherId}
+                    onChange={handleChange}
+                    name="publisherId"
+                    label="Editora"
+                  />
+                }
               />
             </FormControl>
           </Box>
@@ -140,13 +173,13 @@ export function BookForm({
       <Grid container spacing={2}>
         <Grid item xs={6}>
           <Box mb={2}>
-          <FormControl fullWidth>
-            <MultiSelectAutocomplete
-              options={authores}
-              label="Autores"
-            />
-          </FormControl>
-        </Box>
+            <FormControl fullWidth>
+              <MultiSelectAutocomplete
+                options={authors}
+                label="Autores"
+              />
+            </FormControl>
+          </Box>
         </Grid>
       </Grid>
       <Grid item xs={12}>

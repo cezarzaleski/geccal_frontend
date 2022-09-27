@@ -14,14 +14,16 @@ type Propps = {
 }
 
 
-export function PublisherForm({
-                                publisher,
-                                isDisabled,
-                                isLoading,
-                                handleSubmit,
-                                handleChange,
-                                handleToggle
-                              }: Propps) {
+export function PublisherForm(
+  {
+    publisher,
+    isDisabled,
+    isLoading,
+    handleSubmit,
+    handleChange,
+    handleToggle
+  }: Propps
+) {
   return (
     <form onSubmit={handleSubmit}>
       <Grid item xs={12}>
@@ -65,7 +67,7 @@ export function PublisherForm({
             color="secondary"
             disabled={isDisabled}
           >
-            Salvar
+            {isLoading ? "Carregando..." : "Salvar"}
           </Button>
         </Box>
       </Grid>
