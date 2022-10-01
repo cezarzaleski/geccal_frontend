@@ -74,7 +74,7 @@ export function BookForm(
     const start = now.getFullYear();
     for (let i = start; i >= 1988; i--) {
       years.push({
-        label: i,
+        label: ''+i,
         id: i
       })
     }
