@@ -13,10 +13,10 @@ export const publishersResponse = {
       "createdAt": "2022-09-11T21:17:52.585Z"
     }
   ],
-  "total": 4,
+  "total": 95,
   "currentPage": 1,
-  "lastPage": 2,
-  "perPage": 2
+  "lastPage": 7,
+  "perPage": 15
 }
 export const publishersResponse2 = {
   "items": [
@@ -33,8 +33,8 @@ export const publishersResponse2 = {
       "createdAt": "2022-08-29T02:32:23.438Z"
     }
   ],
-  "total": 4,
+  "total": 95,
   "currentPage": 2,
-  "lastPage": 2,
-  "perPage": 2
+  "lastPage": 7,
+  "perPage": 15
 }
