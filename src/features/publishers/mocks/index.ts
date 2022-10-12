@@ -11,7 +11,15 @@ export const publishersResponse = {
       "name": "teste",
       "active": true,
       "createdAt": "2022-09-11T21:17:52.585Z"
-    },
+    }
+  ],
+  "total": 4,
+  "currentPage": 1,
+  "lastPage": 2,
+  "perPage": 2
+}
+export const publishersResponse2 = {
+  "items": [
     {
       "id": "a179a191-5589-4a92-bb2c-00b0ce64be87",
       "name": "FEB",
@@ -26,7 +34,7 @@ export const publishersResponse = {
     }
   ],
   "total": 4,
-  "currentPage": 1,
-  "lastPage": 1,
-  "perPage": 15
+  "currentPage": 2,
+  "lastPage": 2,
+  "perPage": 2
 }

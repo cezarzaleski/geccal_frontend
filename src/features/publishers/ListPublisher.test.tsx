@@ -3,11 +3,14 @@ import { PublisherList } from './ListPublisher';
 import { rest } from 'msw'
 import { setupServer } from 'msw/node'
 import { baseUrl } from '../api/apiSlice';
-import { publishersResponse } from './mocks/index';
-import { waitFor } from '@testing-library/react';
+import { publishersResponse, publishersResponse2 } from './mocks/index';
+import { fireEvent, waitFor } from '@testing-library/react';
 
 export const handlers = [
-  rest.get(`${baseUrl}/publishers`, (_, res, ctx) => {
+  rest.get(`${baseUrl}/publishers`, (req, res, ctx) => {
+    if (req.url.searchParams.get('page') === '2') {
+      return res(ctx.json(publishersResponse2), ctx.delay(150))
+    }
     return res(ctx.json(publishersResponse), ctx.delay(150))
   })
 ]
@@ -51,4 +54,19 @@ describe('ListPublisher', () => {
       expect(name).toBeInTheDocument()
     })
   });
+
+  it('should handle on PageChange', async () => {
+    renderWithProviders(<PublisherList />)
+    await waitFor(() => {
+      const name = screen.getByText('integrado terceiro editado')
+      expect(name).toBeInTheDocument()
+    })
+
+    const nextButton = screen.getByTestId('KeyboardArrowRightIcon');
+    fireEvent.click(nextButton)
+    await waitFor(() => {
+      const name = screen.getByText('FEB')
+      expect(name).toBeInTheDocument()
+    })
+  })
 })
