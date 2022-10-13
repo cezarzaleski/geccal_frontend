@@ -1,10 +1,9 @@
-import { renderWithProviders, screen } from '../../utils/test-utils';
+import { renderWithProviders, screen, fireEvent, waitFor } from '../../utils/test-utils';
 import { PublisherList } from './ListPublisher';
 import { rest } from 'msw'
 import { setupServer } from 'msw/node'
 import { baseUrl } from '../api/apiSlice';
 import { publishersResponse, publishersResponse2 } from './mocks/index';
-import { fireEvent, waitFor } from '@testing-library/react';
 
 export const handlers = [
   rest.get(`${baseUrl}/publishers`, (req, res, ctx) => {
@@ -68,5 +67,24 @@ describe('ListPublisher', () => {
       const name = screen.getByText('FEB')
       expect(name).toBeInTheDocument()
     })
+  })
+  it('should handle filter change', async () => {
+    renderWithProviders(<PublisherList />)
+
+    await waitFor(() => {
+      const name = screen.getByText('integrado terceiro editado')
+      expect(name).toBeInTheDocument()
+    })
+
+    const inputSearch = screen.getByPlaceholderText('Search…')
+    fireEvent.change(inputSearch, {
+      target: { value: 'teste'}
+    })
+
+    await waitFor(() => {
+      const loading = screen.getByRole('progressbar')
+      expect(loading).toBeInTheDocument()
+    })
+
   })
 })
