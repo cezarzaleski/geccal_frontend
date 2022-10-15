@@ -36,6 +36,9 @@ export function PublisherForm(
               onChange={handleChange}
               name="name"
               label="Nome"
+              inputProps={{
+                'data-testid' : 'name'
+              }}
             />
           </FormControl>
         </Box>
