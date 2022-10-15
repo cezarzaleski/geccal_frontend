@@ -108,4 +108,29 @@ describe('ListPublisher', () => {
       expect(name).toBeInTheDocument()
     })
   })
+
+  it('should handle delete publisher error', async () => {
+    server.use(
+      rest.delete(
+        `${baseUrl}/publishers/8e6a5149-79f9-4af0-a247-54ad16be58dd`,
+        (_, res, ctx) => {
+          return res(ctx.delay(150), ctx.status(500))
+        }
+      )
+    )
+
+    renderWithProviders(<PublisherList />)
+
+    await waitFor(() => {
+      const name = screen.getByText('integrado terceiro editado')
+      expect(name).toBeInTheDocument()
+    })
+
+    const nextButton = screen.getAllByTestId('delete-button')[0];
+    fireEvent.click(nextButton)
+    await waitFor(() => {
+      const name = screen.getByText('Editora não removida')
+      expect(name).toBeInTheDocument()
+    })
+  })
 })
