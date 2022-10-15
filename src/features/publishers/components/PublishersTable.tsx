@@ -65,11 +65,11 @@ export function PublishersTable({
       flex: 1,
       renderCell: renderIsActiveCel
     },
-    {
-      field: 'createdAt',
-      headerName: 'Criado em',
-      flex: 1
-    },
+    // {
+    //   field: 'createdAt',
+    //   headerName: 'Criado em',
+    //   flex: 1
+    // },
     {
       field: 'id',
       headerName: 'Ações',
@@ -102,6 +102,7 @@ export function PublishersTable({
     return (
       <IconButton
         color="secondary"
+        data-testid="delete-button"
         onClick={() => handleDelete(params.value)}
         aria-label="delete"
       >

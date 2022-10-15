@@ -11,6 +11,9 @@ export const handlers = [
       return res(ctx.json(publishersResponse2), ctx.delay(150))
     }
     return res(ctx.json(publishersResponse), ctx.delay(150))
+  }),
+  rest.delete(`${baseUrl}/publishers/8e6a5149-79f9-4af0-a247-54ad16be58dd`, (req, res, ctx) => {
+    return res(ctx.delay(150), ctx.status(204))
   })
 ]
 
@@ -86,5 +89,23 @@ describe('ListPublisher', () => {
       expect(loading).toBeInTheDocument()
     })
 
+  })
+
+  it('should handle delete publisher success', async () => {
+    renderWithProviders(<PublisherList />)
+
+    await waitFor(() => {
+      const name = screen.getByText('integrado terceiro editado')
+      // eslint-disable-next-line testing-library/no-debugging-utils
+      // screen.debug(undefined, Infinity);
+      expect(name).toBeInTheDocument()
+    })
+
+    const nextButton = screen.getAllByTestId('delete-button')[0];
+    fireEvent.click(nextButton)
+    await waitFor(() => {
+      const name = screen.getByText('Editora removida com sucesso!')
+      expect(name).toBeInTheDocument()
+    })
   })
 })
