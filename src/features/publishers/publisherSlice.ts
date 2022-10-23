@@ -5,7 +5,7 @@ export interface Publisher {
   id: string;
   name: string;
   active: boolean;
-  deletedAt: null | string;
+  deletedAt?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -74,7 +74,6 @@ export const publishersApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ['Publishers']
     })
   })
-
 })
 
 export const  {

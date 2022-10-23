@@ -7,7 +7,6 @@ const Props = {
     id: '1',
     name: 'Teste',
     active: true,
-    deletedAt: null,
     createdAt: '2022-09-26T00:00:00.000000Z',
     updatedAt: '2022-09-26T00:00:00.000000Z'
   },

@@ -12,10 +12,8 @@ export const PublisherCreate = () => {
     id: '',
     name: '',
     active: true,
-    deletedAt: '',
-    createdAt: '',
-    updatedAt: ''
-
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
   })
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()

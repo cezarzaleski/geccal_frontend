@@ -113,7 +113,7 @@ export function PublishersTable({
   }
 
   const rows = data ? mapDataToGridRows(data) : []
-  const rowCount = data?.total
+  const rowCount = data?.total ? data?.total : 0
 
   return (
     <Box sx={{ display: 'flex', height: 600 }}>
