@@ -14,6 +14,7 @@ import React from 'react';
 import { Book } from '../../../features/books/bookSlice';
 import { MultiSelectAutocomplete } from '../../../components/MultiSelectAutocomplete';
 import { useGetPublishersQuery } from '../../publishers/publisherSlice';
+import { useGetAuthorsQuery } from '../../authors/authorSlice';
 
 const authors = [
   {title: 'Amadeus', id: '1984'},
@@ -58,12 +59,23 @@ export function BookForm(
 ) {
   const options = {perPage: 99999, search: '', page: 1}
   const {data: dataPublishers} = useGetPublishersQuery(options)
+  const {data: dataAuthors} = useGetAuthorsQuery(options)
   const publishers = dataPublishers ? converterPublisher(dataPublishers) : []
+  const authors = dataAuthors ? converterAuthors(dataAuthors) : []
   function converterPublisher(data: any) {
     const { items: publishers } = data
     return publishers?.map((it: { name: any; id: any; }) => {
       return {
         label: it.name,
+        id: it.id
+      }
+    })
+  }
+  function converterAuthors(data: any) {
+    const { items: authors } = data
+    return authors?.map((it: { name: any; id: any; }) => {
+      return {
+        title: it.name,
         id: it.id
       }
     })

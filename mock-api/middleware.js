@@ -1,4 +1,5 @@
 const publishers = require('./data/publishers.json');
+const authors = require('./data/authors.json');
 
 
 module.exports = [
@@ -7,6 +8,9 @@ module.exports = [
     switch (req._parsedUrl.pathname) {
       case '/publishers':
         response = getPublishers();
+        break;
+      case '/authors':
+        response = getAuthors();
         break;
       case '/file-engine/loan-restructuring-reports/2e9331a3-c4c0-450e-9ecb-99c9d7a74976/approve':
       case '/file-engine/loan-restructuring-reports/4fec98a2-999c-419f-895b-06456b8b634d/approve':
@@ -49,4 +53,8 @@ module.exports = [
 
 function getPublishers() {
   return publishers
+}
+
+function getAuthors() {
+  return authors
 }

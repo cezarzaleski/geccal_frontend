@@ -1,27 +1,27 @@
 import { Box, Paper, Typography } from '@mui/material';
-import React, { useState } from 'react';
-import { createBook, Book } from '../../features/books/bookSlice';
+import React, { useEffect, useState } from 'react';
+import { Book, useCreateBookMutation } from '../../features/books/bookSlice';
 import { BookForm } from './components/BookForm';
-import { useAppDispatch } from '../../app/hooks';
 import { useSnackbar } from 'notistack';
+import { envVars } from '../../envVars';
 
 export const BookCreate = () => {
-  const [isDisabled] = useState(false);
-  const dispatch = useAppDispatch()
+  const [isDisabled, setIsDisabled] = useState(false);
+  const [createBook, status] = useCreateBookMutation()
   const { enqueueSnackbar } = useSnackbar()
   const [book, setBook] = useState<Book>({
     id: '',
     name: '',
+    edition: '',
+    year: 0,
+    origin: '',
     active: true,
-    deletedAt: '',
-    createdAt: '',
-    updatedAt: ''
-
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
   })
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    dispatch(createBook(book))
-    enqueueSnackbar('Livro criado com sucesso!', {variant: 'success'})
+    await createBook(book)
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,6 +32,17 @@ export const BookCreate = () => {
     const {name, checked} = e.target
     setBook({...book, [name]: checked})
   };
+  useEffect(() => {
+    console.log('envVars', envVars.BASE_URL)
+    if (status.isSuccess) {
+      enqueueSnackbar('Livro cadastrado com sucesso', {variant: 'success'})
+      setIsDisabled(true)
+    }
+    if (status.error) {
+      enqueueSnackbar('Erro ao cadastrar livro', {variant: 'error'})
+    }
+  }, [enqueueSnackbar, status.error, status.isSuccess]);
+
   return (
     <Box>
       <Paper>
