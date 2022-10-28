@@ -1,11 +1,13 @@
 import { Action, combineReducers, configureStore, PreloadedState, ThunkAction } from '@reduxjs/toolkit';
 import { publishersApiSlice } from '../features/publishers/publisherSlice';
 import { apiSlice } from '../features/api/apiSlice';
+import { authorApiSlice } from '../features/authors/authorSlice';
 
 
 const rootReducer = combineReducers({
   [apiSlice.reducerPath]: apiSlice.reducer,
-  [publishersApiSlice.reducerPath]: publishersApiSlice.reducer
+  [publishersApiSlice.reducerPath]: publishersApiSlice.reducer,
+  [authorApiSlice.reducerPath]: authorApiSlice.reducer
 })
 
 export const setupStore = (preloadedState?: PreloadedState<RootState>) => {

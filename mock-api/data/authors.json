@@ -1,0 +1,38 @@
+{
+  "items": [
+    {
+      "id": "018c49bb-bc99-45e8-a65f-44b2bbc17211",
+      "name": "novo cadastro",
+      "active": true,
+      "createdAt": "2022-10-23T19:57:35.371Z"
+    },
+    {
+      "id": "b47f0599-7b42-457d-bfa8-301474866ae3",
+      "name": "autor da Galera",
+      "active": true,
+      "createdAt": "2022-10-23T19:10:16.309Z"
+    },
+    {
+      "id": "04c14c52-881b-4c71-9404-3a28c0017be8",
+      "name": "Maria",
+      "active": true,
+      "createdAt": "2022-10-23T18:50:20.025Z"
+    },
+    {
+      "id": "3e6b8ad9-109d-4ecc-98af-3875011b9d9e",
+      "name": "pedro",
+      "active": true,
+      "createdAt": "2022-10-23T18:50:10.834Z"
+    },
+    {
+      "id": "cd08fc51-03ff-47c2-bd5c-37b449427890",
+      "name": "Roberto",
+      "active": true,
+      "createdAt": "2022-10-23T18:50:00.769Z"
+    }
+  ],
+  "total": 5,
+  "currentPage": 1,
+  "lastPage": 1,
+  "perPage": 15
+}
