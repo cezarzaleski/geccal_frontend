@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { envVars } from '../../envVars';
 
-export const baseUrl = 'http://localhost:3001'
+export const baseUrl = envVars.BASE_URL
 
 export const apiSlice = createApi({
   reducerPath: '',
