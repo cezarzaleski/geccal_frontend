@@ -4,10 +4,21 @@ import { Book, useCreateBookMutation } from '../../features/books/bookSlice';
 import { BookForm } from './components/BookForm';
 import { useSnackbar } from 'notistack';
 import { envVars } from '../../envVars';
+import { useGetAuthorsQuery } from '../authors/authorSlice';
+import { Author } from '../../types/author';
+import { useGetPublishersQuery } from '../publishers/publisherSlice';
+import { Publisher } from '../../types/publisher';
 
 export const BookCreate = () => {
   const [isDisabled, setIsDisabled] = useState(false);
   const [createBook, status] = useCreateBookMutation()
+  const options = {perPage: 99999, search: '', page: 1}
+  const {data: dataAuthors} = useGetAuthorsQuery(options)
+  const {data: dataPublishers} = useGetPublishersQuery(options)
+  let authors: Author[] = []
+  let publishers: Publisher[] = []
+  if (dataAuthors) authors = dataAuthors.items
+  if (dataPublishers) publishers = dataPublishers.items
   const { enqueueSnackbar } = useSnackbar()
   const [book, setBook] = useState<Book>({
     id: '',
@@ -33,7 +44,6 @@ export const BookCreate = () => {
     setBook({...book, [name]: checked})
   };
   useEffect(() => {
-    console.log('envVars', envVars.BASE_URL)
     if (status.isSuccess) {
       enqueueSnackbar('Livro cadastrado com sucesso', {variant: 'success'})
       setIsDisabled(true)
@@ -53,6 +63,8 @@ export const BookCreate = () => {
         </Box>
         <Box p={2}>
           <BookForm
+            authors={authors}
+            publishers={publishers}
             book={book}
             isDisabled={isDisabled}
             isLoading={false}

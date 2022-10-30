@@ -12,32 +12,13 @@ import {
 import { Link } from 'react-router-dom';
 import React from 'react';
 import { Book } from '../../../features/books/bookSlice';
-import { MultiSelectAutocomplete } from '../../../components/MultiSelectAutocomplete';
-import { useGetPublishersQuery } from '../../publishers/publisherSlice';
-import { useGetAuthorsQuery } from '../../authors/authorSlice';
-
-const authors = [
-  {title: 'Amadeus', id: '1984'},
-  {title: 'To Kill a Mockingbird', id: '1962'},
-  {title: 'Toy Story 3', id: '2010'},
-  {title: 'Logan', id: '2017'},
-  {title: 'Full Metal Jacket', id: '1987'},
-  {title: 'Dangal', id: '2016'},
-  {title: 'The Sting', id: '1973'},
-  {title: '2001: A Space Odyssey', id: '1968'},
-  {title: "Singin' in the Rain", id: '1952'},
-  {title: 'Toy Story', id: '1995'},
-  {title: 'Bicycle Thieves', id: '1948'},
-  {title: 'The Kid', id: '1921'},
-  {title: 'Inglourious Basterds', id: '2009'},
-  {title: 'Snatch', id: '2000'},
-  {title: '3 Idiots', id: '2009'},
-  {title: 'Monty Python and the Holy Grail', id: '1975'},
-];
-
+import { Author } from '../../../types/author';
+import { Publisher } from '../../../types/publisher';
 
 type Props = {
   book: Book,
+  authors?: Author[]
+  publishers?: Publisher[]
   isDisabled?: boolean,
   isLoading?: boolean,
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void
@@ -46,10 +27,11 @@ type Props = {
 }
 
 
-
 export function BookForm(
   {
     book,
+    authors,
+    publishers,
     isDisabled,
     isLoading,
     handleSubmit,
@@ -57,36 +39,14 @@ export function BookForm(
     handleToggle
   }: Props
 ) {
-  const options = {perPage: 99999, search: '', page: 1}
-  const {data: dataPublishers} = useGetPublishersQuery(options)
-  const {data: dataAuthors} = useGetAuthorsQuery(options)
-  const publishers = dataPublishers ? converterPublisher(dataPublishers) : []
-  const authors = dataAuthors ? converterAuthors(dataAuthors) : []
-  function converterPublisher(data: any) {
-    const { items: publishers } = data
-    return publishers?.map((it: { name: any; id: any; }) => {
-      return {
-        label: it.name,
-        id: it.id
-      }
-    })
-  }
-  function converterAuthors(data: any) {
-    const { items: authors } = data
-    return authors?.map((it: { name: any; id: any; }) => {
-      return {
-        title: it.name,
-        id: it.id
-      }
-    })
-  }
+
   function getYears() {
     const years = []
     const now = new Date()
     const start = now.getFullYear();
     for (let i = start; i >= 1988; i--) {
       years.push({
-        label: ''+i,
+        label: '' + i,
         id: i
       })
     }
@@ -127,6 +87,7 @@ export function BookForm(
           <Box mb={2}>
             <FormControl fullWidth>
               <Autocomplete
+                noOptionsText={'Nenhum ano encontrado'}
                 disablePortal
                 options={getYears()}
                 renderInput={(params) =>
@@ -165,19 +126,26 @@ export function BookForm(
             <FormControl fullWidth>
               <Autocomplete
                 disablePortal
-                options={publishers}
-                renderInput={(params) =>
+                noOptionsText={'Nenhuma editora encontrada'}
+                loading={isLoading}
+                onChange={(_, value) => {
+                  handleChange({target: {name: 'publisherId', value}} as any)
+                }}
+                renderOption={(props, option: any) => (
+                  <li {...props} key={option.id} >
+                    {option.name}
+                  </li>
+                )}
+                options={publishers || []}
+                disabled={isDisabled || !publishers}
+                getOptionLabel={(option) => option.name}
+                renderInput={(params) => (
                   <TextField
                     {...params}
-                    required
-                    disabled={isDisabled}
-                    value={book?.publisherId}
-                    onChange={handleChange}
-                    name="publisherId"
                     label="Editora"
+                    data-testid="publisher-input"
                   />
-                }
-              />
+                )}/>
             </FormControl>
           </Box>
         </Grid>
@@ -186,10 +154,29 @@ export function BookForm(
         <Grid item xs={6}>
           <Box mb={2}>
             <FormControl fullWidth>
-              <MultiSelectAutocomplete
-                options={authors}
-                label="Autores"
-              />
+              <Autocomplete
+                disablePortal
+                noOptionsText={'Nenhum autor encontrado'}
+                multiple
+                loading={isLoading}
+                onChange={(_, value) => {
+                  handleChange({target: {name: 'authors', value}} as any)
+                }}
+                renderOption={(props, option: any) => (
+                  <li {...props} key={option.id} >
+                    {option.name}
+                  </li>
+                )}
+                options={authors || []}
+                disabled={isDisabled || !authors}
+                getOptionLabel={(option) => option.name}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Autores"
+                    data-testid="authors-input"
+                  />
+                )}/>
             </FormControl>
           </Box>
         </Grid>
@@ -212,7 +199,7 @@ export function BookForm(
       </Grid>
       <Grid item xs={12}>
         <Box display="flex" gap={2}>
-          <Button variant="contained" component={Link} to="/books">
+          <Button variant="contained" component={Link} to="/livros">
             Voltar
           </Button>
           <Button
