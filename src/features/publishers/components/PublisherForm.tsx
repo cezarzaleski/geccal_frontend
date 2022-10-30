@@ -61,7 +61,7 @@ export function PublisherForm(
       </Grid>
       <Grid item xs={12}>
         <Box display="flex" gap={2}>
-          <Button variant="contained" component={Link} to="/publishers">
+          <Button variant="contained" component={Link} to="/editoras">
             Voltar
           </Button>
           <Button

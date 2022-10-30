@@ -33,12 +33,12 @@ function App() {
           <Layout>
             <Routes>
               <Route path="/" element={<PublisherList/>}/>
-              <Route path="/publishers" element={<PublisherList/>}/>
-              <Route path="/publishers/create" element={<PublisherCreate/>}/>
-              <Route path="/publishers/edit/:id" element={<PublisherEdit/>}/>
-              <Route path="/books" element={<PublisherList/>}/>
-              <Route path="/books/create" element={<BookCreate/>}/>
-              <Route path="/books/edit/:id" element={<PublisherEdit/>}/>
+              <Route path="/editoras" element={<PublisherList/>}/>
+              <Route path="/editoras/criar" element={<PublisherCreate/>}/>
+              <Route path="/editoras/editar/:id" element={<PublisherEdit/>}/>
+              <Route path="/livros" element={<PublisherList/>}/>
+              <Route path="/livros/criar" element={<BookCreate/>}/>
+              <Route path="/livros/editar/:id" element={<PublisherEdit/>}/>
               <Route
                 path="*"
                 element={

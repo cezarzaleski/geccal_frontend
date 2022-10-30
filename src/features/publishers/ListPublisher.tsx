@@ -62,7 +62,7 @@ export const PublisherList = () => {
           variant="contained"
           color="secondary"
           component={Link}
-          to="/publishers/create"
+          to="/editoras/criar"
           style={{marginBottom: '1rem'}}
         >
           Nova Editora
