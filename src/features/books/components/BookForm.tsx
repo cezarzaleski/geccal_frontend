@@ -1,14 +1,4 @@
-import {
-  Autocomplete,
-  Box,
-  Button,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  Grid,
-  Switch,
-  TextField
-} from '@mui/material';
+import { Autocomplete, Box, Button, FormControl, Grid, TextField } from '@mui/material';
 import { Link } from 'react-router-dom';
 import React from 'react';
 import { Book } from '../../../features/books/bookSlice';
@@ -23,7 +13,6 @@ type Props = {
   isLoading?: boolean,
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-  handleToggle: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 
@@ -36,7 +25,6 @@ export function BookForm(
     isLoading,
     handleSubmit,
     handleChange,
-    handleToggle
   }: Props
 ) {
 
@@ -47,10 +35,19 @@ export function BookForm(
     for (let i = start; i >= 1988; i--) {
       years.push({
         label: '' + i,
-        id: i
+        id: ''+ i
       })
     }
     return years
+  }
+
+  function origins() {
+    return [
+      {label: 'Aquisição Geccal', id: 'aquisition'},
+      {label: 'Confecção Geccal', id: 'confection'},
+      {label: 'Doação', id: 'donation'},
+      {label: 'Sem Informação', id: 'no-information'}
+    ]
   }
 
   return (
@@ -78,7 +75,7 @@ export function BookForm(
                 value={book?.edition}
                 onChange={handleChange}
                 name="edition"
-                label="Edição"
+                label="Número da Edição"
               />
             </FormControl>
           </Box>
@@ -90,13 +87,18 @@ export function BookForm(
                 noOptionsText={'Nenhum ano encontrado'}
                 disablePortal
                 options={getYears()}
+                isOptionEqualToValue={(option, value) =>
+                  option?.id === value?.id || option?.label.toLowerCase() === value?.label.toLowerCase()
+                }
+                onChange={(_, value: any) => {
+                  handleChange({target: {name: 'year', value: value?.id}} as any)
+                }}
                 renderInput={(params) =>
                   <TextField
                     {...params}
                     required
                     disabled={isDisabled}
                     value={book?.year}
-                    onChange={handleChange}
                     name="year"
                     label="Ano"
                   />
@@ -110,13 +112,26 @@ export function BookForm(
         <Grid item xs={6}>
           <Box mb={2}>
             <FormControl fullWidth>
-              <TextField
-                required
-                disabled={isDisabled}
-                value={book?.origin}
-                onChange={handleChange}
-                name="origin"
-                label="Origem"
+              <Autocomplete
+                noOptionsText={'Nenhuma origem encontrada'}
+                disablePortal
+                options={origins()}
+                isOptionEqualToValue={(option, value) =>
+                  option?.id === value?.id || option?.label.toLowerCase() === value?.label.toLowerCase()
+                }
+                onChange={(_, value: any) => {
+                  handleChange({target: {name: 'origin', value: value?.id}} as any)
+                }}
+                renderInput={(params) =>
+                  <TextField
+                    {...params}
+                    required
+                    disabled={isDisabled}
+                    value={book?.origin}
+                    name="origin"
+                    label="Origem"
+                  />
+                }
               />
             </FormControl>
           </Box>
@@ -128,8 +143,8 @@ export function BookForm(
                 disablePortal
                 noOptionsText={'Nenhuma editora encontrada'}
                 loading={isLoading}
-                onChange={(_, value) => {
-                  handleChange({target: {name: 'publisherId', value}} as any)
+                onChange={(_, value: Publisher) => {
+                  handleChange({target: {name: 'publisherId', value: value?.id}} as any)
                 }}
                 renderOption={(props, option: any) => (
                   <li {...props} key={option.id} >
@@ -159,8 +174,10 @@ export function BookForm(
                 noOptionsText={'Nenhum autor encontrado'}
                 multiple
                 loading={isLoading}
-                onChange={(_, value) => {
-                  handleChange({target: {name: 'authors', value}} as any)
+                onChange={(_, value: any) => {
+                  let authors = []
+                  if (value && value.length)  authors = value.map((it: { id: any; }) => it.id)
+                  handleChange({target: {name: 'authors', value: authors}} as any)
                 }}
                 renderOption={(props, option: any) => (
                   <li {...props} key={option.id} >
@@ -173,29 +190,13 @@ export function BookForm(
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label="Autores"
+                    label=""
                     data-testid="authors-input"
                   />
                 )}/>
             </FormControl>
           </Box>
         </Grid>
-      </Grid>
-      <Grid item xs={12}>
-        <FormGroup>
-          <FormControlLabel
-            control={
-              <Switch
-                name="active"
-                color="secondary"
-                onChange={handleToggle}
-                checked={book?.active}
-                inputProps={{"aria-label": "controlle"}}
-              />
-            }
-            label="Ativo"
-          />
-        </FormGroup>
       </Grid>
       <Grid item xs={12}>
         <Box display="flex" gap={2}>

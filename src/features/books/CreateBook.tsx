@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { Book, useCreateBookMutation } from '../../features/books/bookSlice';
 import { BookForm } from './components/BookForm';
 import { useSnackbar } from 'notistack';
-import { envVars } from '../../envVars';
 import { useGetAuthorsQuery } from '../authors/authorSlice';
 import { Author } from '../../types/author';
 import { useGetPublishersQuery } from '../publishers/publisherSlice';
@@ -39,10 +38,6 @@ export const BookCreate = () => {
     const {name, value} = e.target
     setBook({...book, [name]: value})
   };
-  const handleToggle = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {name, checked} = e.target
-    setBook({...book, [name]: checked})
-  };
   useEffect(() => {
     if (status.isSuccess) {
       enqueueSnackbar('Livro cadastrado com sucesso', {variant: 'success'})
@@ -70,7 +65,6 @@ export const BookCreate = () => {
             isLoading={false}
             handleSubmit={handleSubmit}
             handleChange={handleChange}
-            handleToggle={handleToggle}
           ></BookForm>
         </Box>
       </Paper>
