@@ -10,6 +10,7 @@ import { PublisherCreate } from './features/publishers/CreatePublisher';
 import { PublisherEdit } from './features/publishers/EditPublisher';
 import { SnackbarProvider } from 'notistack'
 import { BookCreate } from './features/books/CreateBook';
+import { BookList } from './features/books/ListBook';
 
 function App() {
   return (
@@ -36,7 +37,7 @@ function App() {
               <Route path="/editoras" element={<PublisherList/>}/>
               <Route path="/editoras/criar" element={<PublisherCreate/>}/>
               <Route path="/editoras/editar/:id" element={<PublisherEdit/>}/>
-              <Route path="/livros" element={<PublisherList/>}/>
+              <Route path="/livros" element={<BookList/>}/>
               <Route path="/livros/criar" element={<BookCreate/>}/>
               <Route path="/livros/editar/:id" element={<PublisherEdit/>}/>
               <Route
