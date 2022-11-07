@@ -1,0 +1,20 @@
+{
+  "items": [
+    {
+      "id": "018c49bb-bc99-45e8-a65f-44b2bbc17211",
+      "name": "livro 1",
+      "exemplary": 1,
+      "status": "available",
+      "edition": "1ª",
+      "year": 2022,
+      "publisher": "editora",
+      "authors": ["autor 1", "autor2"],
+      "origin": "aquisition",
+      "createdAt": "2022-10-23T19:57:35.371Z"
+    }
+  ],
+  "total": 5,
+  "currentPage": 1,
+  "lastPage": 1,
+  "perPage": 15
+}
