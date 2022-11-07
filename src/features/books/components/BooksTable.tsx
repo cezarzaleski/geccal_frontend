@@ -22,7 +22,7 @@ type Props = {
   handleOnPageSizeChange: (perPage: number) => void;
   handleDelete: (id: string) => void
   handleGenerateExemplary: (id: string) => void
-  handleAssignmnetReturn: (id: string) => void
+  handleAssignmentReturn: (id: string) => void
 }
 
 export function BooksTable(
@@ -35,7 +35,7 @@ export function BooksTable(
     handleFilterChange,
     handleOnPageSizeChange,
     handleDelete,
-    handleAssignmnetReturn,
+    handleAssignmentReturn,
     handleGenerateExemplary
 
   }: Props) {
@@ -200,7 +200,7 @@ export function BooksTable(
         <IconButton
           color="secondary"
           data-testid="assignmnet-returned-button"
-          onClick={() => handleAssignmnetReturn(params.value)}
+          onClick={() => handleAssignmentReturn(params.value)}
           aria-label="dar baixa em empréstimo"
         >
           <AssignmentReturned></AssignmentReturned>

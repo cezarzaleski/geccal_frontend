@@ -82,7 +82,7 @@ export const BookList = () => {
         perPage={perPage}
         rowsPerPage={rowsPerPage}
         handleDelete={handleDeleteBook}
-        handleAssignmnetReturn={handleAssignmentReturned}
+        handleAssignmentReturn={handleAssignmentReturned}
         handleGenerateExemplary={handleGenerateExemplary}
         handleOnPageChange={handleOnPageChange}
         handleOnPageSizeChange={handleOnPageSizeChange}
