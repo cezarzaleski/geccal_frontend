@@ -1,6 +1,12 @@
 export interface Book {
+  status?: string;
   id: string;
   name: string;
+  active: boolean;
+  edition?: string;
+  exemplary?: number;
+  origin?: string;
+  year?: number;
   createdAt: Date;
 }
 

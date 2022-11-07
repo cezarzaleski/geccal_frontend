@@ -6,6 +6,7 @@ export interface Book {
   name: string;
   active: boolean;
   edition?: string;
+  exemplary?: number;
   origin?: string;
   year?: number;
   publisherId?: string;

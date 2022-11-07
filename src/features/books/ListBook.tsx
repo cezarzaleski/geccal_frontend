@@ -17,9 +17,17 @@ export const BookList = () => {
 
 
   const {data, isFetching, error} = useGetBooksQuery(options)
-  const [deletePublisher, deletePublisherStatus] = useDeleteBookMutation()
-  async function handleDeletePublisher(id: string) {
-    await deletePublisher({id})
+  const [deleteBook, deleteBookStatus] = useDeleteBookMutation()
+  async function handleDeleteBook(id: string) {
+    await deleteBook({id})
+  }
+
+  async function handleGenerateExemplary(id: string) {
+    console.log('handleGenerateExemplary', id)
+  }
+
+  async function handleAssignmentReturned(id: string) {
+    console.log('handleAssignmentReturned', id)
   }
 
   function handleOnPageChange(page: number) {
@@ -39,13 +47,13 @@ export const BookList = () => {
   }
 
   useEffect(() => {
-    if (deletePublisherStatus.isSuccess) {
+    if (deleteBookStatus.isSuccess) {
       enqueueSnackbar('Livro removido com sucesso!', {variant: 'success'})
     }
-    if (deletePublisherStatus.error) {
+    if (deleteBookStatus.error) {
       enqueueSnackbar('Livro não removido', {variant: 'error'})
     }
-  }, [deletePublisherStatus])
+  }, [deleteBookStatus])
 
   if(error) {
     return <Typography>
@@ -73,7 +81,9 @@ export const BookList = () => {
         isFetching={isFetching}
         perPage={perPage}
         rowsPerPage={rowsPerPage}
-        handleDelete={handleDeletePublisher}
+        handleDelete={handleDeleteBook}
+        handleAssignmnetReturn={handleAssignmentReturned}
+        handleGenerateExemplary={handleGenerateExemplary}
         handleOnPageChange={handleOnPageChange}
         handleOnPageSizeChange={handleOnPageSizeChange}
         handleFilterChange={handleFilterChange}/>
