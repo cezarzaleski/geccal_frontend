@@ -190,7 +190,7 @@ export function BookForm(
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label=""
+                    label="Autores"
                     data-testid="authors-input"
                   />
                 )}/>
