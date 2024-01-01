@@ -9,7 +9,7 @@ export interface Book {
   exemplary?: number;
   origin?: string;
   year?: number;
-  publisherId?: string;
+  publisher?: string;
   authors?: string[];
   deletedAt?: string;
   createdAt: string;

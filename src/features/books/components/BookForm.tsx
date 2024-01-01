@@ -28,6 +28,34 @@ export function BookForm(
   }: Props
 ) {
 
+  const [errors, setErrors] = React.useState<{ [key: string]: string }>({});
+
+  const validate = () => {
+    let tempErrors = { ...errors };
+    tempErrors = book?.name ? { ...tempErrors, name: "" } : { ...tempErrors, name: "Campo obrigatório" };
+    tempErrors = book?.origin ? { ...tempErrors, origin: "" } : { ...tempErrors, origin: "Campo obrigatório" };
+    tempErrors = book?.year ? { ...tempErrors, year: "" } : { ...tempErrors, year: "Campo obrigatório" };
+    tempErrors = book?.publisher ? { ...tempErrors, publisher: "" } : { ...tempErrors, publisher: "Campo obrigatório" };
+    tempErrors = book?.authors && book.authors.length > 0 ? { ...tempErrors, authors: "" } : { ...tempErrors, authors: "Campo obrigatório" };
+    setErrors(tempErrors);
+    return Object.values(tempErrors).every(value => value === "");
+  };
+
+  const handleSubmitWithValidation = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (validate()) {
+      handleSubmit(e);
+    }
+  };
+
+  const handleChangeWithValidation = (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleChange(e);
+    let tempErrors = { ...errors };
+    tempErrors[e.target.name] = e.target.value ? "" : "Campo obrigatório";
+    setErrors(tempErrors);
+  };
+
+
   function getYears() {
     const years = []
     const now = new Date()
@@ -51,15 +79,16 @@ export function BookForm(
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmitWithValidation}>
       <Grid item xs={12}>
         <Box mb={2}>
           <FormControl fullWidth>
             <TextField
-              required
               disabled={isDisabled}
               value={book?.name}
-              onChange={handleChange}
+              error={!!errors.name}
+              helperText={errors.name}
+              onChange={handleChangeWithValidation}
               name="name"
               label="Nome"
             />
@@ -91,16 +120,17 @@ export function BookForm(
                   option?.id === value?.id || option?.label.toLowerCase() === value?.label.toLowerCase()
                 }
                 onChange={(_, value: any) => {
-                  handleChange({target: {name: 'year', value: value?.id}} as any)
+                  handleChangeWithValidation({target: {name: 'year', value: value?.id}} as any)
                 }}
                 renderInput={(params) =>
                   <TextField
                     {...params}
-                    required
                     disabled={isDisabled}
                     value={book?.year}
                     name="year"
                     label="Ano"
+                    error={!!errors.year}
+                    helperText={errors.year}
                   />
                 }
               />
@@ -120,16 +150,17 @@ export function BookForm(
                   option?.id === value?.id || option?.label.toLowerCase() === value?.label.toLowerCase()
                 }
                 onChange={(_, value: any) => {
-                  handleChange({target: {name: 'origin', value: value?.id}} as any)
+                  handleChangeWithValidation({target: {name: 'origin', value: value?.id}} as any)
                 }}
                 renderInput={(params) =>
                   <TextField
                     {...params}
-                    required
                     disabled={isDisabled}
                     value={book?.origin}
                     name="origin"
                     label="Origem"
+                    error={!!errors.origin}
+                    helperText={errors.origin}
                   />
                 }
               />
@@ -145,7 +176,7 @@ export function BookForm(
                 noOptionsText={'Nenhuma editora encontrada'}
                 loading={isLoading}
                 onChange={(_, value: Publisher) => {
-                  handleChange({target: {name: 'publisherId', value: value?.id}} as any)
+                  handleChangeWithValidation({target: {name: 'publisher', value: value?.id}} as any)
                 }}
                 renderOption={(props, option: any) => (
                   <li {...props} key={option.id} >
@@ -163,6 +194,8 @@ export function BookForm(
                     {...params}
                     label="Editora"
                     data-testid="publisher-input"
+                    error={!!errors.publisher}
+                    helperText={errors.publisher}
                   />
                 )}/>
             </FormControl>
@@ -182,7 +215,7 @@ export function BookForm(
                 onChange={(_, value: any) => {
                   let authors = []
                   if (value && value.length)  authors = value.map((it: { id: any; }) => it.id)
-                  handleChange({target: {name: 'authors', value: authors}} as any)
+                  handleChangeWithValidation({target: {name: 'authors', value: authors}} as any)
                 }}
                 renderOption={(props, option: any) => (
                   <li {...props} key={option.id} >
@@ -200,6 +233,8 @@ export function BookForm(
                     {...params}
                     label="Autores"
                     data-testid="authors-input"
+                    error={!!errors.authors}
+                    helperText={errors.authors}
                   />
                 )}/>
             </FormControl>
