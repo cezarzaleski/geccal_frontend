@@ -1,4 +1,4 @@
-import { Autocomplete, Box, Button, FormControl, Grid, TextField } from '@mui/material';
+import { Autocomplete, Box, Button, Chip, FormControl, Grid, TextField } from '@mui/material';
 import { Link } from 'react-router-dom';
 import React from 'react';
 import { Book } from '../../../features/books/bookSlice';
@@ -7,7 +7,7 @@ import { Publisher } from '../../../types/publisher';
 
 type Props = {
   book: Book,
-  authors?: Author[]
+  authors: Author[]
   publishers?: Publisher[]
   isDisabled?: boolean,
   isLoading?: boolean,
@@ -141,6 +141,7 @@ export function BookForm(
             <FormControl fullWidth>
               <Autocomplete
                 disablePortal
+                freeSolo
                 noOptionsText={'Nenhuma editora encontrada'}
                 loading={isLoading}
                 onChange={(_, value: Publisher) => {
@@ -153,7 +154,10 @@ export function BookForm(
                 )}
                 options={publishers || []}
                 disabled={isDisabled || !publishers}
-                getOptionLabel={(option) => option.name}
+                getOptionLabel={(option) => {
+                  if (typeof option === 'string') return option
+                  return option.name
+                }}
                 renderInput={(params) => (
                   <TextField
                     {...params}
@@ -173,6 +177,7 @@ export function BookForm(
                 disablePortal
                 noOptionsText={'Nenhum autor encontrado'}
                 multiple
+                freeSolo
                 loading={isLoading}
                 onChange={(_, value: any) => {
                   let authors = []
@@ -186,7 +191,10 @@ export function BookForm(
                 )}
                 options={authors || []}
                 disabled={isDisabled || !authors}
-                getOptionLabel={(option) => option.name}
+                getOptionLabel={(option) => {
+                  if (typeof option === 'string') return option
+                  return option.name
+                }}
                 renderInput={(params) => (
                   <TextField
                     {...params}

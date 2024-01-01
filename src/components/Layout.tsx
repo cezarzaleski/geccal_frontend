@@ -9,7 +9,6 @@ export function Layout({children}: { children: ReactNode }) {
         sx={{
           mt: 4,
           mb: 4,
-          color: 'white'
       }}>
         {children}
       </Container>

@@ -27,7 +27,7 @@ function App() {
           component="main"
           sx={{
             height: '100vh',
-            backgroundColor: (theme) => theme.palette.grey[900]
+            backgroundColor: (theme) => theme.palette.grey[100]
           }}
         >
           <Header></Header>
@@ -43,7 +43,7 @@ function App() {
               <Route
                 path="*"
                 element={
-                  <Box sx={{color: 'white'}}>
+                  <Box sx={{color: 'black'}}>
                     <Typography variant="h1">404</Typography>
                     <Typography variant="h2">Page not found</Typography>
                   </Box>

@@ -16,8 +16,13 @@ export function Header() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            News
+          <Typography component="div" sx={{ flexGrow: 1}}>
+            <Typography variant="h6">
+              Biblioteca Infantil
+            </Typography>
+            <Typography variant="subtitle1">
+              Departamento de Infância e Juventude
+            </Typography>
           </Typography>
           <Button color="inherit">Login</Button>
         </Toolbar>

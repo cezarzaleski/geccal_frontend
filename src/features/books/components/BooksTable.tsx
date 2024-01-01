@@ -1,14 +1,7 @@
-import {
-  DataGrid,
-  GridColDef,
-  GridFilterModel,
-  GridRenderCellParams,
-  GridRowsProp,
-  GridToolbar
-} from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridFilterModel, GridRenderCellParams, GridToolbar, ptBR } from '@mui/x-data-grid';
 import { Box, IconButton, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { Delete, RestartAlt, AssignmentReturned } from '@mui/icons-material';
+import { AssignmentReturned, Delete, RestartAlt } from '@mui/icons-material';
 import React from 'react';
 import { Results } from '../../../types/book';
 
@@ -56,8 +49,11 @@ export function BooksTable(
   const componentProps = {
     toolbar: {
       showQuickFilter: true,
-      quickFilterProps: {debounceMs: 500}
-    }
+      quickFilterProps: {debounceMs: 500},
+      printOptions: { disableToolbarButton: true },
+      csvOptions: { disableToolbarButton: true },
+      columnsButtonOptions: { disableColumnSelector: true },
+    },
   }
 
   const columns: GridColDef[] = [
@@ -74,12 +70,6 @@ export function BooksTable(
       renderCell: renderExemplaryCel
     },
     {
-      field: 'year',
-      headerName: 'Ano',
-      flex: 1,
-      renderCell: renderExemplaryCel
-    },
-    {
       field: 'origin',
       headerName: 'Origem',
       flex: 1,
@@ -91,11 +81,6 @@ export function BooksTable(
       flex: 1,
       renderCell: renderStatusCel
     },
-    // {
-    //   field: 'createdAt',
-    //   headerName: 'Criado em',
-    //   flex: 1
-    // },
     {
       field: 'id',
       headerName: 'Ações',
@@ -182,7 +167,7 @@ export function BooksTable(
     return (
       <>
         <IconButton
-          color="secondary"
+          color="primary"
           data-testid="generate-exemplary-button"
           onClick={() => handleGenerateExemplary(params.value)}
           aria-label="gerar exemplar"
@@ -190,7 +175,7 @@ export function BooksTable(
           <RestartAlt></RestartAlt>
         </IconButton>
         <IconButton
-          color="secondary"
+          color="primary"
           data-testid="delete-button"
           onClick={() => handleDelete(params.value)}
           aria-label="delete"
@@ -198,7 +183,7 @@ export function BooksTable(
           <Delete></Delete>
         </IconButton>
         <IconButton
-          color="secondary"
+          color="primary"
           data-testid="assignmnet-returned-button"
           onClick={() => handleAssignmentReturn(params.value)}
           aria-label="dar baixa em empréstimo"
@@ -219,6 +204,9 @@ export function BooksTable(
         columns={columns}
         rows={rows}
         componentsProps={componentProps}
+        localeText={{
+          ...ptBR.components.MuiDataGrid.defaultProps.localeText,
+        }}
         pageSize={perPage}
         filterMode={'server'}
         paginationMode={'server'}
