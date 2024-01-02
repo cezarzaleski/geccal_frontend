@@ -1,12 +1,7 @@
 import { Box, Paper, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import {
-  Publisher,
-  useCreatePublisherMutation,
-  useGetPublisherQuery,
-  useUpdatePublisherMutation
-} from './publisherSlice';
+import { Publisher, useGetPublisherQuery, useUpdatePublisherMutation } from './publisherSlice';
 import { PublisherForm } from './components/PublisherForm';
 import { useSnackbar } from 'notistack';
 
