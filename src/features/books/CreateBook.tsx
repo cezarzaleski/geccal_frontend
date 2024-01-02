@@ -8,7 +8,7 @@ import { Author } from '../../types/author';
 import { useGetPublishersQuery } from '../publishers/publisherSlice';
 import { Publisher } from '../../types/publisher';
 
-export const BookCreate = () => {
+export const CreateBook = () => {
   const [isDisabled, setIsDisabled] = useState(false);
   const [createBook, status] = useCreateBookMutation()
   const options = {perPage: 99999, search: '', page: 1}
@@ -25,9 +25,9 @@ export const BookCreate = () => {
     edition: '',
     year: 0,
     origin: '',
+    publisher: '',
     active: true,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    authors: [],
   })
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()

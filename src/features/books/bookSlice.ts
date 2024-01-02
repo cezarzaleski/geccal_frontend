@@ -12,8 +12,6 @@ export interface Book {
   publisher?: string;
   authors?: string[];
   deletedAt?: string;
-  createdAt: string;
-  updatedAt: string;
 }
 
 const endpointUrl = '/books'

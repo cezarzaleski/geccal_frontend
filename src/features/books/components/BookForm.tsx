@@ -1,4 +1,4 @@
-import { Autocomplete, Box, Button, Chip, FormControl, Grid, TextField } from '@mui/material';
+import { Autocomplete, Box, Button, FormControl, Grid, TextField } from '@mui/material';
 import { Link } from 'react-router-dom';
 import React from 'react';
 import { Book } from '../../../features/books/bookSlice';
@@ -86,6 +86,9 @@ export function BookForm(
             <TextField
               disabled={isDisabled}
               value={book?.name}
+              inputProps={{
+                'data-testid' : 'name'
+              }}
               error={!!errors.name}
               helperText={errors.name}
               onChange={handleChangeWithValidation}
@@ -104,6 +107,9 @@ export function BookForm(
                 value={book?.edition}
                 onChange={handleChange}
                 name="edition"
+                inputProps={{
+                  'data-testid' : 'edition'
+                }}
                 label="Número da Edição"
               />
             </FormControl>
@@ -129,6 +135,7 @@ export function BookForm(
                     value={book?.year}
                     name="year"
                     label="Ano"
+                    data-testid="year"
                     error={!!errors.year}
                     helperText={errors.year}
                   />
@@ -159,6 +166,7 @@ export function BookForm(
                     value={book?.origin}
                     name="origin"
                     label="Origem"
+                    data-testid="origin"
                     error={!!errors.origin}
                     helperText={errors.origin}
                   />
@@ -173,10 +181,19 @@ export function BookForm(
               <Autocomplete
                 disablePortal
                 freeSolo
-                noOptionsText={'Nenhuma editora encontrada'}
                 loading={isLoading}
-                onChange={(_, value: Publisher) => {
-                  handleChangeWithValidation({target: {name: 'publisher', value: value?.id}} as any)
+                onInputChange={(_, value: string) => {
+                  // A new option has been entered
+                  handleChangeWithValidation({target: {name: 'publisher', value}} as any);
+                }}
+                onChange={(_, value: Publisher | string) => {
+                  if (typeof value === 'string') {
+                    // A new option has been entered
+                    handleChangeWithValidation({target: {name: 'publisher', value}} as any);
+                  } else {
+                    // An existing option has been selected
+                    handleChangeWithValidation({target: {name: 'publisher', value: value?.id}} as any);
+                  }
                 }}
                 renderOption={(props, option: any) => (
                   <li {...props} key={option.id} >
@@ -193,11 +210,12 @@ export function BookForm(
                   <TextField
                     {...params}
                     label="Editora"
-                    data-testid="publisher-input"
+                    data-testid="publisher"
                     error={!!errors.publisher}
                     helperText={errors.publisher}
                   />
-                )}/>
+                )}
+              />
             </FormControl>
           </Box>
         </Grid>
@@ -232,7 +250,7 @@ export function BookForm(
                   <TextField
                     {...params}
                     label="Autores"
-                    data-testid="authors-input"
+                    data-testid="authors"
                     error={!!errors.authors}
                     helperText={errors.authors}
                   />
