@@ -9,7 +9,7 @@ import { PublisherList } from './features/publishers/ListPublisher';
 import { PublisherCreate } from './features/publishers/CreatePublisher';
 import { PublisherEdit } from './features/publishers/EditPublisher';
 import { SnackbarProvider } from 'notistack'
-import { CreateBook } from 'src/features/books/CreateBook';
+import { CreateBook } from './features/books/CreateBook';
 import { BookList } from './features/books/ListBook';
 
 function App() {
