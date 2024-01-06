@@ -1,5 +1,6 @@
 import { Box, FormControl, Grid } from '@mui/material';
 import React from 'react';
+import { AuCompleteCustom } from '../../../components/AuCompleteCustom';
 
 
 type Props = {
@@ -15,8 +16,9 @@ type Props = {
 
 export function BorrowForm(
   {
-    isDisabled,
-    isLoading,
+    borrow,
+    isDisabled = false,
+    isLoading = false,
     handleSubmit,
     handleChange,
   }: Props
@@ -50,6 +52,15 @@ export function BorrowForm(
       <Grid item xs={12}>
         <Box mb={2}>
           <FormControl fullWidth>
+            <AuCompleteCustom
+              name="bookId"
+              label="Livro"
+              isLoading={isLoading}
+              isDisabled={isDisabled}
+              values={borrow.bookId}
+              options={[]}
+              handleChange={handleChange}
+            />
           </FormControl>
         </Box>
       </Grid>
