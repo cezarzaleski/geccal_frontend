@@ -13,7 +13,7 @@ type Props = {
 
 }
 
-export function BookForm(
+export function BorrowForm(
   {
     isDisabled,
     isLoading,
