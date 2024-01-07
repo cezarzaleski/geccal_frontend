@@ -1,21 +1,9 @@
 import { apiSlice } from '../../features/api/apiSlice';
-import { BooksParams, Results } from '../../types/book';
-
-export interface Book {
-  id: string;
-  name: string;
-  active: boolean;
-  edition?: string;
-  exemplary?: number;
-  origin?: string;
-  year?: number;
-  publisher?: string;
-  authors?: string[];
-  deletedAt?: string;
-}
+import { Paginator } from '../../types/paginator';
+import { Book } from './book';
 
 const endpointUrl = '/books'
-function parseQueryParams(params: BooksParams) {
+function parseQueryParams(params: Paginator.Params) {
   const query = new URLSearchParams()
   if (params?.page) query.append('page', params.page.toString())
   if (params?.perPage) query.append('perPage', params.perPage.toString())
@@ -29,7 +17,7 @@ function getBooks({page = 1, perPage = 10, search = ''}) {
   return `${endpointUrl}?${parseQueryParams(params)}`
 }
 
-function deleteBookMutation(book: Book) {
+function deleteBookMutation(book: Book.Entity) {
   return {
     url: `${endpointUrl}/${book.id}`,
     method: 'DELETE'
@@ -40,7 +28,7 @@ function getBook({id}: { id: string }) {
   return `${endpointUrl}/${id}`
 }
 
-function createBookMutation(book: Book) {
+function createBookMutation(book: Book.New) {
   return {
     url: `${endpointUrl}`,
     body: book,
@@ -48,7 +36,7 @@ function createBookMutation(book: Book) {
   }
 }
 
-function updateBookMutation(book: Book) {
+function updateBookMutation(book: Book.Entity) {
   return {
     url: `${endpointUrl}/${book.id}`,
     body: book,
@@ -58,7 +46,7 @@ function updateBookMutation(book: Book) {
 
 export const booksApiSlice = apiSlice.injectEndpoints({
   endpoints: ({query, mutation}) => ({
-    getBooks: query<Results, BooksParams>({
+    getBooks: query<Paginator.Response<Book.Entity>, Paginator.Params>({
       query: getBooks,
       providesTags: ['Books']
     }),
@@ -70,11 +58,11 @@ export const booksApiSlice = apiSlice.injectEndpoints({
       query: deleteBookMutation,
       invalidatesTags: ['Books']
     }),
-    createBook: mutation<any, Book>({
+    createBook: mutation<any, Book.New>({
       query: createBookMutation,
       invalidatesTags: ['Books']
     }),
-    updateBook: mutation<any, Book>({
+    updateBook: mutation<any, Book.Entity>({
       query: updateBookMutation,
       invalidatesTags: ['Books']
     })

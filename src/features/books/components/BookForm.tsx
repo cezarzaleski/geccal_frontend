@@ -1,12 +1,12 @@
 import { Autocomplete, Box, Button, FormControl, Grid, TextField } from '@mui/material';
 import { Link } from 'react-router-dom';
 import React from 'react';
-import { Book } from '../../../features/books/bookSlice';
+import { Book } from '../../../features/books/book';
 import { Author } from '../../../types/author';
 import { Publisher } from '../../../types/publisher';
 
 type Props = {
-  book: Book,
+  book: Book.New,
   authors: Author[]
   publishers?: Publisher[]
   isDisabled?: boolean,

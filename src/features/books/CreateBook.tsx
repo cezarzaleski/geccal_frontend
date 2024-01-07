@@ -1,6 +1,7 @@
 import { Box, Paper, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { Book, useCreateBookMutation } from '../../features/books/bookSlice';
+import { useCreateBookMutation } from '../../features/books/bookSlice';
+import { Book } from '../../features/books/book';
 import { BookForm } from './components/BookForm';
 import { useSnackbar } from 'notistack';
 import { useGetAuthorsQuery } from '../authors/authorSlice';
@@ -19,14 +20,12 @@ export const CreateBook = () => {
   if (dataAuthors) authors = dataAuthors.items
   if (dataPublishers) publishers = dataPublishers.items
   const { enqueueSnackbar } = useSnackbar()
-  const [book, setBook] = useState<Book>({
-    id: '',
+  const [book, setBook] = useState<Book.New>({
     name: '',
     edition: '',
     year: 0,
     origin: '',
     publisher: '',
-    active: true,
     authors: [],
   })
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {

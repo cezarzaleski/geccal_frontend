@@ -3,10 +3,11 @@ import { Box, IconButton, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { AssignmentReturned, Delete, RestartAlt } from '@mui/icons-material';
 import React from 'react';
-import { Results } from '../../../types/book';
+import { Paginator } from '../../../types/paginator';
+import { Book } from '../book';
 
 type Props = {
-  data: Results | undefined;
+  data: Paginator.Response<Book.Entity> | undefined;
   perPage: number;
   isFetching: boolean;
   rowsPerPage?: number[];
@@ -33,7 +34,7 @@ export function BooksTable(
 
   }: Props) {
 
-  function mapDataToGridRows(data: Results) {
+  function mapDataToGridRows(data: Paginator.Response<Book.Entity>) {
     const {items: books} = data
     return books.map((book) => ({
       id: book.id,

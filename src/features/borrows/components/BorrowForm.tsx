@@ -61,8 +61,8 @@ export function BorrowForm(
           <Box mb={2}>
             <FormControl fullWidth>
               <AuCompleteCustom
-                name="bookId"
-                label="Livro"
+                name="evangelizandoId"
+                label="Evangelizando"
                 isLoading={isLoading}
                 isDisabled={isDisabled}
                 values={borrow.bookId}
