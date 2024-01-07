@@ -261,13 +261,12 @@ export function BookForm(
       </Grid>
       <Grid item xs={12}>
         <Box display="flex" gap={2}>
-          <Button variant="contained" component={Link} to="/livros">
+          <Button variant="contained" component={Link} to="/livros" color="secondary">
             Voltar
           </Button>
           <Button
             type="submit"
             variant="contained"
-            color="secondary"
             disabled={isDisabled}
           >
             Salvar
