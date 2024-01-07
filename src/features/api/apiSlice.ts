@@ -5,7 +5,7 @@ export const baseUrl = envVars.BASE_URL
 
 export const apiSlice = createApi({
   reducerPath: '',
-  tagTypes: ['Publishers', 'Books', 'Authors'],
+  tagTypes: ['Publishers', 'Books', 'Authors', 'Evangelizandos'],
   baseQuery: fetchBaseQuery({baseUrl}),
   endpoints: (builder) => ({})
 })

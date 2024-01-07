@@ -1,0 +1,24 @@
+{
+  "items": [
+    {
+      "id": "018c49bb-bc99-45e8-a65f-44b2bbc1723",
+      "name": "Lívia Oliveira Heinen",
+      "class": {
+        "id": "018c49bb-bc99-45e8-a65f-44b2bbc17214",
+        "name": "Jardim"
+      }
+    },
+    {
+      "id": "018c49bb-bc99-45e8-a65f-44b2bbc17234",
+      "name": "Enzo Oliveira Heinen",
+      "class": {
+        "id": "018c49bb-bc99-45e8-a65f-44b2bbc172990",
+        "name": "2º Ciclo"
+      }
+    }
+  ],
+  "total": 5,
+  "currentPage": 1,
+  "lastPage": 1,
+  "perPage": 15
+}

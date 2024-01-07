@@ -2,12 +2,14 @@ import { Action, combineReducers, configureStore, PreloadedState, ThunkAction } 
 import { publishersApiSlice } from '../features/publishers/publisherSlice';
 import { apiSlice } from '../features/api/apiSlice';
 import { authorApiSlice } from '../features/authors/authorSlice';
+import { evangelizandosApiSlice } from '../features/evangelizando/evangelizandoSlice';
 
 
 const rootReducer = combineReducers({
   [apiSlice.reducerPath]: apiSlice.reducer,
   [publishersApiSlice.reducerPath]: publishersApiSlice.reducer,
-  [authorApiSlice.reducerPath]: authorApiSlice.reducer
+  [authorApiSlice.reducerPath]: authorApiSlice.reducer,
+  [evangelizandosApiSlice.reducerPath]: evangelizandosApiSlice.reducer
 })
 
 export const setupStore = (preloadedState?: PreloadedState<RootState>) => {
