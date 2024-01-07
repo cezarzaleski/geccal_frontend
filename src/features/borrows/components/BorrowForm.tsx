@@ -1,19 +1,19 @@
 import { Box, Button, FormControl, Grid } from '@mui/material';
 import React from 'react';
-import { AuCompleteCustom } from '../../../components/AuCompleteCustom';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import 'dayjs/locale/pt-br';
 import { Link } from 'react-router-dom';
+import { Book } from '../../books/book';
+import {AutoCompleteCustom} from '../../../components/AutoCompleteCustom';
 
 dayjs.locale('pt-br');
 
 
 type Props = {
   borrow: any,
-  // authors: Author[]
-  // publishers?: Publisher[]
+  books: Book.Entity[]
   isDisabled?: boolean,
   isLoading?: boolean,
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void
@@ -23,6 +23,7 @@ type Props = {
 
 export function BorrowForm(
   {
+    books,
     borrow,
     isDisabled = false,
     isLoading = false,
@@ -53,6 +54,15 @@ export function BorrowForm(
     }
   };
 
+  const booksToOption = () => {
+    return books?.map((book: Book.Entity) => {
+      return {
+        id: book.id,
+        name: `${book.name} - ${book.exemplary}`
+      }
+    })
+  }
+
 
   return (
     <form onSubmit={handleSubmitWithValidation}>
@@ -60,7 +70,7 @@ export function BorrowForm(
         <Grid item xs={12}>
           <Box mb={2}>
             <FormControl fullWidth>
-              <AuCompleteCustom
+              <AutoCompleteCustom
                 name="evangelizandoId"
                 label="Evangelizando"
                 isLoading={isLoading}
@@ -75,13 +85,13 @@ export function BorrowForm(
         <Grid item xs={12}>
           <Box mb={2}>
             <FormControl fullWidth>
-              <AuCompleteCustom
+              <AutoCompleteCustom
                 name="bookId"
                 label="Livro"
                 isLoading={isLoading}
                 isDisabled={isDisabled}
                 values={borrow.bookId}
-                options={[]}
+                options={booksToOption()}
                 handleChange={handleChange}
               />
             </FormControl>

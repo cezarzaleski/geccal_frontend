@@ -1,5 +1,10 @@
 import { Autocomplete, AutocompleteRenderInputParams, TextField } from '@mui/material';
 
+type Option = {
+  id: string;
+  name: string;
+};
+
 type Props = {
   name: string;
   label: string;
@@ -7,11 +12,11 @@ type Props = {
   isDisabled: boolean;
   multiple?: boolean;
   values?: (any)[];
-  options?: (any)[];
+  options?: (Option)[];
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-export const AuCompleteCustom = (
+export const AutoCompleteCustom = (
   {
     name,
     label,
@@ -40,7 +45,7 @@ export const AuCompleteCustom = (
 
   const handleOnChange = (
     _e: React.ChangeEvent<{}>,
-    newValue: (any)[]
+    newValue: (Option)[]
   ) => {
     handleChange({target: {name, value: newValue}} as any);
   };

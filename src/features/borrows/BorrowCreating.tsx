@@ -1,6 +1,8 @@
 import { Box, Paper, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { BorrowForm } from './components/BorrowForm';
+import { useGetBooksQuery } from '../books/bookSlice';
+import { Book } from '../books/book';
 
 
 export const BorrowCreating = () => {
@@ -15,7 +17,13 @@ export const BorrowCreating = () => {
     publisher: '',
     active: true,
     authors: [],
-  })
+  });
+
+  const {data: books} = useGetBooksQuery({
+    perPage: 999999,
+    search: '',
+    page: 0
+  });
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -25,7 +33,6 @@ export const BorrowCreating = () => {
     const {name, value} = e.target
     setBorrow({...borrow, [name]: value})
   };
-
 
 
   return (
@@ -39,6 +46,7 @@ export const BorrowCreating = () => {
         <Box p={2}>
           <BorrowForm
             borrow={borrow}
+            books={books?.items as Array<Book.Entity>}
             isDisabled={isDisabled}
             isLoading={false}
             handleSubmit={handleSubmit}
