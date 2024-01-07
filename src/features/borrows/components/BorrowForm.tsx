@@ -1,19 +1,21 @@
-import { Box, Button, FormControl, Grid } from '@mui/material';
+import {Box, Button, FormControl, Grid} from '@mui/material';
 import React from 'react';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import {DatePicker, LocalizationProvider} from '@mui/x-date-pickers';
+import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import 'dayjs/locale/pt-br';
-import { Link } from 'react-router-dom';
-import { Book } from '../../books/book';
+import {Link} from 'react-router-dom';
+import {Book} from '../../books/book';
 import {AutoCompleteCustom} from '../../../components/AutoCompleteCustom';
+import {Evangelizando} from '../../evangelizando/evangelizando';
 
 dayjs.locale('pt-br');
 
 
 type Props = {
   borrow: any,
-  books: Book.Entity[]
+  books: Book.Entity[],
+  evangelizandos: Evangelizando.Borrow[],
   isDisabled?: boolean,
   isLoading?: boolean,
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void
@@ -25,6 +27,7 @@ export function BorrowForm(
   {
     books,
     borrow,
+    evangelizandos,
     isDisabled = false,
     isLoading = false,
     handleSubmit,
@@ -63,6 +66,15 @@ export function BorrowForm(
     })
   }
 
+  const evangelizandosToOption = () => {
+    return evangelizandos?.map((evangelizando: Evangelizando.Borrow) => {
+      return {
+        id: evangelizando.id,
+        name: `${evangelizando.name} - ${evangelizando.class. name}`
+      }
+    })
+  }
+
 
   return (
     <form onSubmit={handleSubmitWithValidation}>
@@ -76,7 +88,7 @@ export function BorrowForm(
                 isLoading={isLoading}
                 isDisabled={isDisabled}
                 values={borrow.bookId}
-                options={[]}
+                options={evangelizandosToOption()}
                 handleChange={handleChange}
               />
             </FormControl>

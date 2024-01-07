@@ -1,8 +1,10 @@
-import { Box, Paper, Typography } from '@mui/material';
-import React, { useState } from 'react';
-import { BorrowForm } from './components/BorrowForm';
-import { useGetBooksQuery } from '../books/bookSlice';
-import { Book } from '../books/book';
+import {Box, Paper, Typography} from '@mui/material';
+import React, {useState} from 'react';
+import {BorrowForm} from './components/BorrowForm';
+import {useGetBooksQuery} from '../books/bookSlice';
+import {Book} from '../books/book';
+import {useGetEvangelizandosQuery} from '../evangelizando/evangelizandoSlice';
+import {Evangelizando} from '../evangelizando/evangelizando';
 
 
 export const BorrowCreating = () => {
@@ -20,6 +22,12 @@ export const BorrowCreating = () => {
   });
 
   const {data: books} = useGetBooksQuery({
+    perPage: 999999,
+    search: '',
+    page: 0
+  });
+
+  const {data: evangelizandos} = useGetEvangelizandosQuery({
     perPage: 999999,
     search: '',
     page: 0
@@ -47,6 +55,7 @@ export const BorrowCreating = () => {
           <BorrowForm
             borrow={borrow}
             books={books?.items as Array<Book.Entity>}
+            evangelizandos={evangelizandos?.items as Array<Evangelizando.Borrow>}
             isDisabled={isDisabled}
             isLoading={false}
             handleSubmit={handleSubmit}
