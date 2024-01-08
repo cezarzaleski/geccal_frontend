@@ -15,10 +15,10 @@ export namespace Book {
   };
   export type New = {
     name: string;
-    edition?: string;
-    origin?: string;
-    year?: number;
-    publisher?: string;
-    authors?: string[];
+    edition: string;
+    origin: string;
+    year: number;
+    publisher: string;
+    authors: string[];
   };
 }

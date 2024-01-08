@@ -4,6 +4,7 @@ import React from 'react';
 import { Book } from '../../../features/books/book';
 import { Author } from '../../../types/author';
 import { Publisher } from '../../../types/publisher';
+import { AutoCompleteCustom } from '../../../components/AutoCompleteCustom';
 
 type Props = {
   book: Book.New,
@@ -21,8 +22,8 @@ export function BookForm(
     book,
     authors,
     publishers,
-    isDisabled,
-    isLoading,
+    isDisabled = false,
+    isLoading = false,
     handleSubmit,
     handleChange,
   }: Props
@@ -62,8 +63,8 @@ export function BookForm(
     const start = now.getFullYear();
     for (let i = start; i >= 1988; i--) {
       years.push({
-        label: '' + i,
-        id: ''+ i
+        id: ''+ i,
+        name: '' + i
       })
     }
     return years
@@ -118,28 +119,16 @@ export function BookForm(
         <Grid item xs={6}>
           <Box mb={2}>
             <FormControl fullWidth>
-              <Autocomplete
-                noOptionsText={'Nenhum ano encontrado'}
-                disablePortal
-                options={getYears()}
-                isOptionEqualToValue={(option, value) =>
-                  option?.id === value?.id || option?.label.toLowerCase() === value?.label.toLowerCase()
-                }
-                onChange={(_, value: any) => {
-                  handleChangeWithValidation({target: {name: 'year', value: value?.id}} as any)
-                }}
-                renderInput={(params) =>
-                  <TextField
-                    {...params}
-                    disabled={isDisabled}
-                    value={book?.year}
-                    name="year"
-                    label="Ano"
-                    data-testid="year"
-                    error={!!errors.year}
-                    helperText={errors.year}
-                  />
-                }
+              <AutoCompleteCustom
+                  name="year"
+                  label="Ano"
+                  isLoading={isLoading}
+                  isDisabled={isDisabled}
+                  handleChange={handleChangeWithValidation}
+                  values={book?.year ? [book.year] : []}
+                  options={getYears()}
+                  error={!!errors.year}
+                  helperText={errors.year}
               />
             </FormControl>
           </Box>
