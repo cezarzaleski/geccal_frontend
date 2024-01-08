@@ -23,12 +23,12 @@ export const AutoCompleteCustom = (
   {
     name,
     label,
-    values,
+    multiple = false,
+    values = multiple ? [] : [null], // Set default value based on multiple
     options = [],
     isLoading,
     isDisabled,
     handleChange,
-    multiple = false,
     error = false,
     helperText = '',
   }: Props) => {
@@ -45,9 +45,15 @@ export const AutoCompleteCustom = (
     option: Option,
     value: Option | any
   ) => {
-
-    return option.id === value.id;
+    if (Array.isArray(value)) {
+      if (value.length) return false
+      return value.length > 0 ? option.id === value[0].id : false;
+    } else {
+      return option.id === value;
+    }
   };
+
+
 
   const handleOnChange = (
     _e: React.ChangeEvent<{}>,
@@ -68,16 +74,16 @@ export const AutoCompleteCustom = (
     <Autocomplete
       multiple={multiple}
       noOptionsText={'Nenhuma opção encontrada'}
-      value={multiple ? values : values[0]}
+      value={values} // Use values directly
       options={options || []}
       loading={isLoading}
       onChange={handleOnChange}
       renderInput={renderInput}
-      data-testid={`${name}-search`}
+      data-testid={`${name}-sear ch`}
       renderOption={renderOptions}
       isOptionEqualToValue={isEqualId}
       disabled={isDisabled || !options}
-      getOptionLabel={(option) => option.name}
+      getOptionLabel={(option) => Array.isArray(option) && option.length > 0 ? option[0] : ''}
     />
   );
 };

@@ -72,10 +72,10 @@ export function BookForm(
 
   function origins() {
     return [
-      {label: 'Aquisição Geccal', id: 'aquisition'},
-      {label: 'Confecção Geccal', id: 'confection'},
-      {label: 'Doação', id: 'donation'},
-      {label: 'Sem Informação', id: 'no-information'}
+      {name: 'Aquisição Geccal', id: 'aquisition'},
+      {name: 'Confecção Geccal', id: 'confection'},
+      {name: 'Doação', id: 'donation'},
+      {name: 'Sem Informação', id: 'no-information'}
     ]
   }
 
@@ -138,28 +138,16 @@ export function BookForm(
         <Grid item xs={6}>
           <Box mb={2}>
             <FormControl fullWidth>
-              <Autocomplete
-                noOptionsText={'Nenhuma origem encontrada'}
-                disablePortal
+              <AutoCompleteCustom
+                name="origin"
+                label="Origem"
+                isLoading={isLoading}
+                isDisabled={isDisabled}
+                handleChange={handleChangeWithValidation}
+                values={book?.origin ? [book.origin] : []}
                 options={origins()}
-                isOptionEqualToValue={(option, value) =>
-                  option?.id === value?.id || option?.label.toLowerCase() === value?.label.toLowerCase()
-                }
-                onChange={(_, value: any) => {
-                  handleChangeWithValidation({target: {name: 'origin', value: value?.id}} as any)
-                }}
-                renderInput={(params) =>
-                  <TextField
-                    {...params}
-                    disabled={isDisabled}
-                    value={book?.origin}
-                    name="origin"
-                    label="Origem"
-                    data-testid="origin"
-                    error={!!errors.origin}
-                    helperText={errors.origin}
-                  />
-                }
+                error={!!errors.origin}
+                helperText={errors.origin}
               />
             </FormControl>
           </Box>
