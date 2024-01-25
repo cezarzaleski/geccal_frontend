@@ -1,13 +1,13 @@
-import { render } from '@testing-library/react';
-import { Layout } from './Layout';
+import { render } from "@testing-library/react";
+import { Layout } from "./Layout";
 
-describe('Layout', () => {
-  it('should render correctly', () => {
-    const { asFragment } = render(
-      <Layout>
-        <div>teste</div>
-      </Layout>
-    )
-    expect(asFragment()).toMatchSnapshot()
-  })
+describe("Layout", () => {
+	it("should render correctly", () => {
+		const { asFragment } = render(
+			<Layout>
+				<div>teste</div>
+			</Layout>,
+		);
+		expect(asFragment()).toMatchSnapshot();
+	});
 });
