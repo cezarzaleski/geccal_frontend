@@ -29,7 +29,6 @@ export const BorrowCreating = () => {
 	});
 
 	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-		console.log(borrow);
 		e.preventDefault();
 	}
 
