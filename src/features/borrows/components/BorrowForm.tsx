@@ -1,8 +1,8 @@
 import {Box, Button, FormControl, Grid} from '@mui/material';
-import React from 'react';
+import React, {useState} from 'react';
 import {DatePicker, LocalizationProvider} from '@mui/x-date-pickers';
 import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
-import dayjs from 'dayjs';
+import dayjs, {Dayjs} from 'dayjs';
 import 'dayjs/locale/pt-br';
 import {Link} from 'react-router-dom';
 import {Book} from '../../books/book';
@@ -35,7 +35,7 @@ export function BorrowForm(
   }: Props
 ) {
 
-  const [errors, setErrors] = React.useState<{ [key: string]: string }>({});
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const handleChangeWithValidation = (e: React.ChangeEvent<HTMLInputElement>) => {
     handleChange(e);
@@ -44,8 +44,18 @@ export function BorrowForm(
     setErrors(tempErrors);
   };
 
+  const setBorrowAt = (date: Dayjs | null) => {
+    handleChange({target: {name: 'borrowAt', value: date?.format('YYYY-MM-DD')}} as any);
+    let tempErrors = {...errors};
+    tempErrors['borrowAt'] = date ? "" : "Campo obrigatório";
+    setErrors(tempErrors);
+  };
+
   const validate = () => {
     let tempErrors = {...errors};
+    tempErrors = borrow?.bookId ? { ...tempErrors, bookId: "" } : { ...tempErrors, bookId: "Campo obrigatório" };
+    tempErrors = borrow?.evangelizandoId ? { ...tempErrors, evangelizandoId: "" } : { ...tempErrors, evangelizandoId: "Campo obrigatório" };
+    tempErrors = borrow?.borrowAt ? { ...tempErrors, borrowAt: "" } : { ...tempErrors, borrowAt: "Campo obrigatório" };
     setErrors(tempErrors);
     return Object.values(tempErrors).every(value => value === "");
   };
@@ -87,9 +97,11 @@ export function BorrowForm(
                 label="Evangelizando"
                 isLoading={isLoading}
                 isDisabled={isDisabled}
-                values={borrow.bookId}
+                values={borrow.evangelizandoId}
                 options={evangelizandosToOption()}
-                handleChange={handleChange}
+                handleChange={handleChangeWithValidation}
+                error={!!errors.evangelizandoId}
+                helperText={errors.evangelizandoId}
               />
             </FormControl>
           </Box>
@@ -104,7 +116,9 @@ export function BorrowForm(
                 isDisabled={isDisabled}
                 values={borrow.bookId}
                 options={booksToOption()}
-                handleChange={handleChange}
+                handleChange={handleChangeWithValidation}
+                error={!!errors.bookId}
+                helperText={errors.bookId}
               />
             </FormControl>
           </Box>
@@ -113,7 +127,17 @@ export function BorrowForm(
           <Box mb={2}>
             <FormControl fullWidth>
               <LocalizationProvider dateAdapter={AdapterDayjs} dateLibInstance={dayjs}>
-                <DatePicker label="Data de Empréstimo" value={dayjs()}/>
+                <DatePicker
+                  label="Data de Empréstimo"
+                  value={dayjs(borrow.borrowAt)}
+                  onChange={(newDate: Dayjs | null) => setBorrowAt(newDate)}
+                  slotProps={{
+                    textField: {
+                      helperText: errors.borrowAt,
+                      error: !!errors.borrowAt,
+                    },
+                  }}
+                />
               </LocalizationProvider>
             </FormControl>
           </Box>

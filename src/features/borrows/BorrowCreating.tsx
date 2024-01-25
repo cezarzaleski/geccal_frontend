@@ -5,6 +5,7 @@ import {useGetBooksQuery} from '../books/bookSlice';
 import {Book} from '../books/book';
 import {useGetEvangelizandosQuery} from '../evangelizando/evangelizandoSlice';
 import {Evangelizando} from '../evangelizando/evangelizando';
+import dayjs from 'dayjs';
 
 
 export const BorrowCreating = () => {
@@ -12,13 +13,9 @@ export const BorrowCreating = () => {
   const [isDisabled, setIsDisabled] = useState(false);
   const [borrow, setBorrow] = useState<any>({
     id: '',
-    name: '',
-    edition: '',
-    year: 0,
-    origin: '',
-    publisher: '',
-    active: true,
-    authors: [],
+    bookId: '',
+    evangelizandoId: '',
+    borrowAt: dayjs().format('YYYY-MM-DD'),
   });
 
   const {data: books} = useGetBooksQuery({
@@ -34,6 +31,7 @@ export const BorrowCreating = () => {
   });
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    console.log(borrow)
     e.preventDefault()
   }
 

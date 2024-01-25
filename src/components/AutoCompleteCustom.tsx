@@ -11,6 +11,7 @@ type Props = {
   isLoading: boolean;
   isDisabled: boolean;
   multiple?: boolean;
+  freeSolo?: boolean;
   values: (any);
   options?: (Option)[];
   error?: boolean;
@@ -24,7 +25,8 @@ export const AutoCompleteCustom = (
     name,
     label,
     multiple = false,
-    values = multiple ? [] : [null], // Set default value based on multiple
+    freeSolo = false,
+    values = multiple ? [] : [null],
     options = [],
     isLoading,
     isDisabled,
@@ -32,14 +34,23 @@ export const AutoCompleteCustom = (
     error = false,
     helperText = '',
   }: Props) => {
-  const renderOptions = (
-    props: React.HTMLAttributes<HTMLLIElement>,
-    option: any
-  ) => (
-    <li {...props} key={option.id}>
-      {option.name}
-    </li>
-  );
+  // ...
+
+  const handleOnChange = (
+    _e: React.ChangeEvent<{}>,
+    newValue: Option | Option[] | string
+  ) => {
+    if (typeof newValue === 'string') {
+      // A new value has been entered
+      handleChange({target: {name, value: newValue}} as any);
+    } else if (multiple) {
+      // Multiple existing options have been selected
+      handleChange({target: {name, value: (newValue as Option[]).map((option: Option) => option.id)}} as any);
+    } else {
+      // A single existing option has been selected
+      handleChange({target: {name, value: newValue ? (newValue as Option).id : ''}} as any);
+    }
+  };
 
   const isEqualId = (
     option: Option,
@@ -53,37 +64,40 @@ export const AutoCompleteCustom = (
     }
   };
 
-
-
-  const handleOnChange = (
-    _e: React.ChangeEvent<{}>,
-    newValue: Option | Option[]
-  ) => {
-    if (multiple) {
-      handleChange({target: {name, value: (newValue as Option[]).map((option: Option) => option.id)}} as any);
+  const getOptionLabel = (option: any) => {
+    if (typeof option === 'string') {
+      const matchingOption = options.find((opt) => opt.id === option);
+      return matchingOption ? matchingOption.name : option;
+    } else if (Array.isArray(option)) {
+      return option.length && option[0]?.name ? option[0]?.name : '';
+    } else if (option && typeof option === 'object') {
+      return option.name || '';
     } else {
-      handleChange({target: {name, value: newValue ? (newValue as Option).id : ''}} as any);
+      return '';
     }
   };
-
-  const renderInput = (params: AutocompleteRenderInputParams) => (
-    <TextField {...params} label={label} data-testid={`${name}-input`} error={error} helperText={helperText}/>
-  );
 
   return (
     <Autocomplete
       multiple={multiple}
+      freeSolo={freeSolo}
       noOptionsText={'Nenhuma opção encontrada'}
-      value={values} // Use values directly
+      value={values}
       options={options || []}
       loading={isLoading}
       onChange={handleOnChange}
-      renderInput={renderInput}
-      data-testid={`${name}-sear ch`}
-      renderOption={renderOptions}
+      renderInput={(params) => (
+        <TextField {...params} label={label} data-testid={`${name}-input`} error={error} helperText={helperText}/>
+      )}
+      data-testid={`${name}-search`}
+      renderOption={(props, option: any) => (
+        <li {...props} key={option.id}>
+          {option.name}
+        </li>
+      )}
       isOptionEqualToValue={isEqualId}
       disabled={isDisabled || !options}
-      getOptionLabel={(option) => Array.isArray(option) && option.length > 0 ? option[0] : ''}
+      getOptionLabel={getOptionLabel}
     />
   );
 };
