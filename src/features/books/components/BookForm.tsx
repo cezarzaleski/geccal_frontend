@@ -199,10 +199,11 @@ export function BookForm({
 							<AutoCompleteCustom
 								name="authors"
 								label="Autores"
+								multiple={true}
 								freeSolo={true}
 								isLoading={isLoading}
 								isDisabled={isDisabled}
-								values={book.authors}
+								values={book.authors || []}
 								options={authors || []}
 								handleChange={handleChangeWithValidationAutocomplete} />
 							{/*<Autocomplete*/}

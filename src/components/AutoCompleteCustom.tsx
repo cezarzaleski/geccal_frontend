@@ -44,10 +44,9 @@ export const AutoCompleteCustom = ({
 		details?: AutocompleteChangeDetails<string | Option> | undefined
 	) => {
 		if (typeof newValue === "string") {
-			// A new value has been entered
 			handleChange(name, newValue);
 		} else if (Array.isArray(newValue)) {
-			// handleChange(newValue.map((option: Option) => option.id));
+			handleChange(name, newValue.map((option: string | Option) => typeof option === 'string' ? option : option.id));
 		} else if (newValue) {
 			handleChange(name, newValue.id);
 		} else {
