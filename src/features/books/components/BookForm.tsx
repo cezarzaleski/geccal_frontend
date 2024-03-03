@@ -20,7 +20,7 @@ type Props = {
 	isDisabled?: boolean;
 	isLoading?: boolean;
 	handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-	handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+	handleChange: (name: string, value: string | number | Array<string> | Array<number>) => void;
 };
 
 export function BookForm({
@@ -66,18 +66,17 @@ export function BookForm({
 	const handleChangeWithValidation = (
 		e: React.ChangeEvent<HTMLInputElement>,
 	) => {
-		handleChange(e);
+		handleChange(e.target.name, e.target.value);
 		const tempErrors = { ...errors };
 		tempErrors[e.target.name] = e.target.value ? "" : "Campo obrigatório";
 		setErrors(tempErrors);
 	};
 
-	const handleChangeWithValidationAutocomplete = (value: string | Array<string>) => {
-		console.log(value);
-		// handleChange(e);
-		// const tempErrors = { ...errors };
-		// tempErrors[e.target.name] = e.target.value ? "" : "Campo obrigatório";
-		// setErrors(tempErrors);
+	const handleChangeWithValidationAutocomplete = (name: string, value: string | Array<string>) => {
+		handleChange(name, value);
+		const tempErrors = { ...errors };
+		tempErrors[name] = value ? "" : "Campo obrigatório";
+		setErrors(tempErrors);
 	};
 
 	function getYears() {
@@ -129,7 +128,7 @@ export function BookForm({
 							<TextField
 								disabled={isDisabled}
 								value={book?.edition}
-								onChange={handleChange}
+								onChange={handleChangeWithValidation}
 								name="edition"
 								inputProps={{
 									"data-testid": "edition",
@@ -148,7 +147,7 @@ export function BookForm({
 								isLoading={isLoading}
 								isDisabled={isDisabled}
 								handleChange={handleChangeWithValidationAutocomplete}
-								values={book?.year.toString() ? [book.year.toString()] : []}
+								values={book.year ? book.year.toString() : ''}
 								options={getYears()}
 								error={!!errors.year}
 								helperText={errors.year}

@@ -1,6 +1,6 @@
+import {AutocompleteChangeDetails} from '@mui/base/AutocompleteUnstyled/useAutocomplete';
 import {Autocomplete, TextField,} from "@mui/material";
 import React from 'react';
-import {AutocompleteChangeDetails} from '@mui/base/AutocompleteUnstyled/useAutocomplete';
 
 type Option = {
 	id: string;
@@ -14,12 +14,12 @@ type Props = {
 	isDisabled: boolean;
 	multiple?: boolean;
 	freeSolo?: boolean;
-	values: string | Array<string>;
+	values: string | Option | (string | Option)[];
 	options?: Option[];
 	error?: boolean;
 	helperText?: string;
 
-	handleChange: (value: string | Array<string>) => void;
+	handleChange: (name: string, value: string | Array<string>) => void;
 };
 
 export const AutoCompleteCustom = ({
@@ -35,32 +35,33 @@ export const AutoCompleteCustom = ({
 	error = false,
 	helperText = "",
 }: Props) => {
-	// ...
+
 
 	const handleOnChange = (
 		event: React.SyntheticEvent<Element, Event>,
 		newValue: string | Option | (string | Option)[] | null,
 		reason: string,
-		details?: AutocompleteChangeDetails<Option> | undefined,
+		details?: AutocompleteChangeDetails<string | Option> | undefined
 	) => {
 		if (typeof newValue === "string") {
 			// A new value has been entered
-			handleChange(newValue);
+			handleChange(name, newValue);
 		} else if (Array.isArray(newValue)) {
 			// handleChange(newValue.map((option: Option) => option.id));
 		} else if (newValue) {
-			handleChange(newValue.id);
+			handleChange(name, newValue.id);
 		} else {
-			handleChange("");
+			handleChange(name,"");
 		}
 	};
 
-	const isEqualId = (option: Option, value: Option | string) => {
-		if (Array.isArray(value)) {
+	const isEqualId = (option: string | Option, value: string | Option) => {
+		const optionId = typeof option === "string" ? option : option.id;
+		if (Array.isArray(value) && option instanceof Option) {
 			if (value.length) return false;
-			return value.length > 0 ? option.id === value[0].id : false;
+			return value.length > 0 ?optionId === value[0].id : false;
 		}
-			return option.id === value;
+			return optionId === value;
 	};
 
 	const getOptionLabel = (option: string | Option | Array<Option>) => {
@@ -83,7 +84,7 @@ export const AutoCompleteCustom = ({
 			multiple={multiple}
 			freeSolo={freeSolo}
 			noOptionsText={"Nenhuma opção encontrada"}
-			value={values}
+			value={values || ''}
 			options={options || []}
 			loading={isLoading}
 			onChange={handleOnChange}
@@ -97,9 +98,9 @@ export const AutoCompleteCustom = ({
 				/>
 			)}
 			data-testid={`${name}-search`}
-			renderOption={(props, option: Option) => (
-				<li {...props} key={option.id}>
-					{option.name}
+			renderOption={(props, option: string | Option) => (
+				<li {...props} key={typeof option === 'string' ? option : option.id}>
+					{typeof option === 'string' ? option : option.name}
 				</li>
 			)}
 			isOptionEqualToValue={isEqualId}

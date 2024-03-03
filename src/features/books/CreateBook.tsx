@@ -33,8 +33,7 @@ export const CreateBook = () => {
 		await createBook(book);
 	}
 
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const { name, value } = e.target;
+	const handleChange = (name: string, value: string | number | Array<string> | Array<number>) => {
 		setBook({ ...book, [name]: value });
 	};
 	useEffect(() => {
@@ -64,7 +63,7 @@ export const CreateBook = () => {
 						isLoading={false}
 						handleSubmit={handleSubmit}
 						handleChange={handleChange}
-					></BookForm>
+					/>
 				</Box>
 			</Paper>
 		</Box>
