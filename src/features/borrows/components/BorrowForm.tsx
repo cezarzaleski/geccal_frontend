@@ -39,18 +39,9 @@ export function BorrowForm({
 }: Props) {
 	const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-	const handleChangeWithValidationAutocomplete = (value: string | Array<string>) => {
-		handleChange('bookId', value);
+	const handleChangeWithValidationAutocomplete = (name: string, value: string | Array<string>) => {
+		handleChange(name, value);
 	}
-
-	const handleChangeWithValidation = (
-		e: React.ChangeEvent<HTMLInputElement>,
-	) => {
-		// handleChange(e);
-		const tempErrors = { ...errors };
-		tempErrors[e.target.name] = e.target.value ? '' : 'Campo obrigatório';
-		setErrors(tempErrors);
-	};
 
 	const setBorrowAt = (date: Dayjs | null) => {
 		const value = date ? date?.format('YYYY-MM-DD') : '';
