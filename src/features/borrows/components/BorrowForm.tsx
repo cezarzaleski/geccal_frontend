@@ -1,24 +1,31 @@
-import { Box, Button, FormControl, Grid } from "@mui/material";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs, { Dayjs } from "dayjs";
-import "dayjs/locale/pt-br";
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { AutoCompleteCustom } from "../../../components/AutoCompleteCustom";
-import { Book } from "../../books/book";
-import { Evangelizando } from "../../evangelizando/evangelizando";
+import { Box, Button, FormControl, Grid } from '@mui/material';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs, { Dayjs } from 'dayjs';
+import 'dayjs/locale/pt-br';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { AutoCompleteCustom } from '../../../components/AutoCompleteCustom';
+import { Book } from '../../books/book';
+import { Evangelizando } from '../../evangelizando/evangelizando';
 
-dayjs.locale("pt-br");
+dayjs.locale('pt-br');
+
+export type Borrow = {
+	id: string;
+	bookId: string;
+	evangelizandoId: string;
+	borrowAt: string;
+};
 
 type Props = {
-	borrow: any;
+	borrow: Borrow;
 	books: Book.Entity[];
 	evangelizandos: Evangelizando.Borrow[];
 	isDisabled?: boolean;
 	isLoading?: boolean;
 	handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-	handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+	handleChange: (name: string, value: string | number | Array<string> | Array<number>) => void;
 };
 
 export function BorrowForm({
@@ -32,37 +39,40 @@ export function BorrowForm({
 }: Props) {
 	const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
+	const handleChangeWithValidationAutocomplete = (value: string | Array<string>) => {
+		handleChange('bookId', value);
+	}
+
 	const handleChangeWithValidation = (
 		e: React.ChangeEvent<HTMLInputElement>,
 	) => {
-		handleChange(e);
+		// handleChange(e);
 		const tempErrors = { ...errors };
-		tempErrors[e.target.name] = e.target.value ? "" : "Campo obrigatório";
+		tempErrors[e.target.name] = e.target.value ? '' : 'Campo obrigatório';
 		setErrors(tempErrors);
 	};
 
 	const setBorrowAt = (date: Dayjs | null) => {
-		handleChange({
-			target: { name: "borrowAt", value: date?.format("YYYY-MM-DD") },
-		} as any);
+		const value = date ? date?.format('YYYY-MM-DD') : '';
+		handleChange('borrowAt', value);
 		const tempErrors = { ...errors };
-		tempErrors["borrowAt"] = date ? "" : "Campo obrigatório";
+		tempErrors.borrowAt = date ? '' : 'Campo obrigatório';
 		setErrors(tempErrors);
 	};
 
 	const validate = () => {
 		let tempErrors = { ...errors };
 		tempErrors = borrow?.bookId
-			? { ...tempErrors, bookId: "" }
-			: { ...tempErrors, bookId: "Campo obrigatório" };
+			? { ...tempErrors, bookId: '' }
+			: { ...tempErrors, bookId: 'Campo obrigatório' };
 		tempErrors = borrow?.evangelizandoId
-			? { ...tempErrors, evangelizandoId: "" }
-			: { ...tempErrors, evangelizandoId: "Campo obrigatório" };
+			? { ...tempErrors, evangelizandoId: '' }
+			: { ...tempErrors, evangelizandoId: 'Campo obrigatório' };
 		tempErrors = borrow?.borrowAt
-			? { ...tempErrors, borrowAt: "" }
-			: { ...tempErrors, borrowAt: "Campo obrigatório" };
+			? { ...tempErrors, borrowAt: '' }
+			: { ...tempErrors, borrowAt: 'Campo obrigatório' };
 		setErrors(tempErrors);
-		return Object.values(tempErrors).every((value) => value === "");
+		return Object.values(tempErrors).every((value) => value === '');
 	};
 
 	const handleSubmitWithValidation = (e: React.FormEvent<HTMLFormElement>) => {
@@ -97,13 +107,13 @@ export function BorrowForm({
 					<Box mb={2}>
 						<FormControl fullWidth>
 							<AutoCompleteCustom
-								name="evangelizandoId"
-								label="Evangelizando"
+								name='evangelizandoId'
+								label='Evangelizando'
 								isLoading={isLoading}
 								isDisabled={isDisabled}
 								values={borrow.evangelizandoId}
 								options={evangelizandosToOption()}
-								handleChange={handleChangeWithValidation}
+								handleChange={handleChangeWithValidationAutocomplete}
 								error={!!errors.evangelizandoId}
 								helperText={errors.evangelizandoId}
 							/>
@@ -114,13 +124,13 @@ export function BorrowForm({
 					<Box mb={2}>
 						<FormControl fullWidth>
 							<AutoCompleteCustom
-								name="bookId"
-								label="Livro"
+								name='bookId'
+								label='Livro'
 								isLoading={isLoading}
 								isDisabled={isDisabled}
 								values={borrow.bookId}
 								options={booksToOption()}
-								handleChange={handleChangeWithValidation}
+								handleChange={handleChangeWithValidationAutocomplete}
 								error={!!errors.bookId}
 								helperText={errors.bookId}
 							/>
@@ -135,7 +145,7 @@ export function BorrowForm({
 								dateLibInstance={dayjs}
 							>
 								<DatePicker
-									label="Data de Empréstimo"
+									label='Data de Empréstimo'
 									value={dayjs(borrow.borrowAt)}
 									onChange={(newDate: Dayjs | null) => setBorrowAt(newDate)}
 									slotProps={{
@@ -151,16 +161,16 @@ export function BorrowForm({
 				</Grid>
 			</Grid>
 			<Grid item xs={12}>
-				<Box display="flex" gap={2}>
+				<Box display='flex' gap={2}>
 					<Button
-						variant="contained"
+						variant='contained'
 						component={Link}
-						to="/emprestimos"
-						color="secondary"
+						to='/emprestimos'
+						color='secondary'
 					>
 						Voltar
 					</Button>
-					<Button type="submit" variant="contained" disabled={isDisabled}>
+					<Button type='submit' variant='contained' disabled={isDisabled}>
 						Salvar
 					</Button>
 				</Box>

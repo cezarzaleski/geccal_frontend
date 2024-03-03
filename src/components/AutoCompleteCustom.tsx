@@ -1,8 +1,6 @@
-import {
-	Autocomplete,
-	AutocompleteRenderInputParams,
-	TextField,
-} from "@mui/material";
+import {Autocomplete, TextField,} from "@mui/material";
+import React from 'react';
+import {AutocompleteChangeDetails} from '@mui/base/AutocompleteUnstyled/useAutocomplete';
 
 type Option = {
 	id: string;
@@ -16,12 +14,12 @@ type Props = {
 	isDisabled: boolean;
 	multiple?: boolean;
 	freeSolo?: boolean;
-	values: any;
+	values: string | Array<string>;
 	options?: Option[];
 	error?: boolean;
 	helperText?: string;
 
-	handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+	handleChange: (value: string | Array<string>) => void;
 };
 
 export const AutoCompleteCustom = ({
@@ -29,7 +27,7 @@ export const AutoCompleteCustom = ({
 	label,
 	multiple = false,
 	freeSolo = false,
-	values = multiple ? [] : [null],
+	values = multiple ? [] : '',
 	options = [],
 	isLoading,
 	isDisabled,
@@ -40,50 +38,46 @@ export const AutoCompleteCustom = ({
 	// ...
 
 	const handleOnChange = (
-		_e: React.ChangeEvent<{}>,
-		newValue: Option | Option[] | string,
+		event: React.SyntheticEvent<Element, Event>,
+		newValue: string | Option | (string | Option)[] | null,
+		reason: string,
+		details?: AutocompleteChangeDetails<Option> | undefined,
 	) => {
 		if (typeof newValue === "string") {
 			// A new value has been entered
-			handleChange({ target: { name, value: newValue } } as any);
-		} else if (multiple) {
-			// Multiple existing options have been selected
-			handleChange({
-				target: {
-					name,
-					value: (newValue as Option[]).map((option: Option) => option.id),
-				},
-			} as any);
+			handleChange(newValue);
+		} else if (Array.isArray(newValue)) {
+			// handleChange(newValue.map((option: Option) => option.id));
+		} else if (newValue) {
+			handleChange(newValue.id);
 		} else {
-			// A single existing option has been selected
-			handleChange({
-				target: { name, value: newValue ? (newValue as Option).id : "" },
-			} as any);
+			handleChange("");
 		}
 	};
 
-	const isEqualId = (option: Option, value: Option | any) => {
+	const isEqualId = (option: Option, value: Option | string) => {
 		if (Array.isArray(value)) {
 			if (value.length) return false;
 			return value.length > 0 ? option.id === value[0].id : false;
-		} else {
-			return option.id === value;
 		}
+			return option.id === value;
 	};
 
-	const getOptionLabel = (option: any) => {
+	const getOptionLabel = (option: string | Option | Array<Option>) => {
+		console.log(option);
 		if (typeof option === "string") {
 			const matchingOption = options.find((opt) => opt.id === option);
 			return matchingOption ? matchingOption.name : option;
-		} else if (Array.isArray(option)) {
-			return option.length && option[0]?.name ? option[0]?.name : "";
-		} else if (option && typeof option === "object") {
-			return option.name || "";
-		} else {
-			return "";
 		}
+		if (Array.isArray(option)) {
+			return option.length && option[0]?.name ? option[0]?.name : "";
+		} if (option && typeof option === "object") {
+			return option.name || "";
+		}
+			return "";
 	};
 
+	// @ts-ignore
 	return (
 		<Autocomplete
 			multiple={multiple}
@@ -103,7 +97,7 @@ export const AutoCompleteCustom = ({
 				/>
 			)}
 			data-testid={`${name}-search`}
-			renderOption={(props, option: any) => (
+			renderOption={(props, option: Option) => (
 				<li {...props} key={option.id}>
 					{option.name}
 				</li>

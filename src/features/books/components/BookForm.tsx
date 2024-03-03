@@ -72,14 +72,22 @@ export function BookForm({
 		setErrors(tempErrors);
 	};
 
+	const handleChangeWithValidationAutocomplete = (value: string | Array<string>) => {
+		console.log(value);
+		// handleChange(e);
+		// const tempErrors = { ...errors };
+		// tempErrors[e.target.name] = e.target.value ? "" : "Campo obrigatório";
+		// setErrors(tempErrors);
+	};
+
 	function getYears() {
 		const years = [];
 		const now = new Date();
 		const start = now.getFullYear();
 		for (let i = start; i >= 1988; i--) {
 			years.push({
-				id: "" + i,
-				name: "" + i,
+				id: `${i}`,
+				name: `${i}`,
 			});
 		}
 		return years;
@@ -139,8 +147,8 @@ export function BookForm({
 								label="Ano"
 								isLoading={isLoading}
 								isDisabled={isDisabled}
-								handleChange={handleChangeWithValidation}
-								values={book?.year ? [book.year] : []}
+								handleChange={handleChangeWithValidationAutocomplete}
+								values={book?.year.toString() ? [book.year.toString()] : []}
 								options={getYears()}
 								error={!!errors.year}
 								helperText={errors.year}
@@ -158,8 +166,8 @@ export function BookForm({
 								label="Origem"
 								isLoading={isLoading}
 								isDisabled={isDisabled}
-								handleChange={handleChangeWithValidation}
-								values={book?.origin ? [book.origin] : []}
+								handleChange={handleChangeWithValidationAutocomplete}
+								values={book?.origin}
 								options={origins()}
 								error={!!errors.origin}
 								helperText={errors.origin}
@@ -170,49 +178,16 @@ export function BookForm({
 				<Grid item xs={6}>
 					<Box mb={2}>
 						<FormControl fullWidth>
-							<Autocomplete
-								disablePortal
-								freeSolo
-								loading={isLoading}
-								onInputChange={(_, value: string) => {
-									// A new option has been entered
-									handleChangeWithValidation({
-										target: { name: "publisher", value },
-									} as any);
-								}}
-								onChange={(_, value: Publisher | string) => {
-									if (typeof value === "string") {
-										// A new option has been entered
-										handleChangeWithValidation({
-											target: { name: "publisher", value },
-										} as any);
-									} else {
-										// An existing option has been selected
-										handleChangeWithValidation({
-											target: { name: "publisher", value: value?.id },
-										} as any);
-									}
-								}}
-								renderOption={(props, option: any) => (
-									<li {...props} key={option.id}>
-										{option.name}
-									</li>
-								)}
+							<AutoCompleteCustom
+								name="publisher"
+								label="Editora"
+								isLoading={isLoading}
+								isDisabled={isDisabled}
+								handleChange={handleChangeWithValidationAutocomplete}
+								values={book?.publisher}
 								options={publishers || []}
-								disabled={isDisabled || !publishers}
-								getOptionLabel={(option) => {
-									if (typeof option === "string") return option;
-									return option.name;
-								}}
-								renderInput={(params) => (
-									<TextField
-										{...params}
-										label="Editora"
-										data-testid="publisher"
-										error={!!errors.publisher}
-										helperText={errors.publisher}
-									/>
-								)}
+								error={!!errors.publisher}
+								helperText={errors.publisher}
 							/>
 						</FormControl>
 					</Box>
@@ -222,41 +197,50 @@ export function BookForm({
 				<Grid item xs={6}>
 					<Box mb={2}>
 						<FormControl fullWidth>
-							<Autocomplete
-								disablePortal
-								noOptionsText={"Nenhum autor encontrado"}
-								multiple
-								freeSolo
-								loading={isLoading}
-								onChange={(_, value: any) => {
-									let authors = [];
-									if (value && value.length)
-										authors = value.map((it: { id: any }) => it.id);
-									handleChangeWithValidation({
-										target: { name: "authors", value: authors },
-									} as any);
-								}}
-								renderOption={(props, option: any) => (
-									<li {...props} key={option.id}>
-										{option.name}
-									</li>
-								)}
+							<AutoCompleteCustom
+								name="authors"
+								label="Autores"
+								freeSolo={true}
+								isLoading={isLoading}
+								isDisabled={isDisabled}
+								values={book.authors}
 								options={authors || []}
-								disabled={isDisabled || !authors}
-								getOptionLabel={(option) => {
-									if (typeof option === "string") return option;
-									return option.name;
-								}}
-								renderInput={(params) => (
-									<TextField
-										{...params}
-										label="Autores"
-										data-testid="authors"
-										error={!!errors.authors}
-										helperText={errors.authors}
-									/>
-								)}
-							/>
+								handleChange={handleChangeWithValidationAutocomplete} />
+							{/*<Autocomplete*/}
+							{/*	disablePortal*/}
+							{/*	noOptionsText={"Nenhum autor encontrado"}*/}
+							{/*	multiple*/}
+							{/*	freeSolo*/}
+							{/*	loading={isLoading}*/}
+							{/*	onChange={(_, value: any) => {*/}
+							{/*		let authors = [];*/}
+							{/*		if (value && value.length)*/}
+							{/*			authors = value.map((it: { id: any }) => it.id);*/}
+							{/*		handleChangeWithValidation({*/}
+							{/*			target: { name: "authors", value: authors },*/}
+							{/*		} as any);*/}
+							{/*	}}*/}
+							{/*	renderOption={(props, option: any) => (*/}
+							{/*		<li {...props} key={option.id}>*/}
+							{/*			{option.name}*/}
+							{/*		</li>*/}
+							{/*	)}*/}
+							{/*	options={authors || []}*/}
+							{/*	disabled={isDisabled || !authors}*/}
+							{/*	getOptionLabel={(option) => {*/}
+							{/*		if (typeof option === "string") return option;*/}
+							{/*		return option.name;*/}
+							{/*	}}*/}
+							{/*	renderInput={(params) => (*/}
+							{/*		<TextField*/}
+							{/*			{...params}*/}
+							{/*			label="Autores"*/}
+							{/*			data-testid="authors"*/}
+							{/*			error={!!errors.authors}*/}
+							{/*			helperText={errors.authors}*/}
+							{/*		/>*/}
+							{/*	)}*/}
+							{/*/>*/}
 						</FormControl>
 					</Box>
 				</Grid>

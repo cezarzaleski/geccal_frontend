@@ -5,11 +5,11 @@ import { Book } from "../books/book";
 import { useGetBooksQuery } from "../books/bookSlice";
 import { Evangelizando } from "../evangelizando/evangelizando";
 import { useGetEvangelizandosQuery } from "../evangelizando/evangelizandoSlice";
-import { BorrowForm } from "./components/BorrowForm";
+import {Borrow, BorrowForm} from "./components/BorrowForm";
 
 export const BorrowCreating = () => {
 	const [isDisabled, setIsDisabled] = useState(false);
-	const [borrow, setBorrow] = useState<any>({
+	const [borrow, setBorrow] = useState<Borrow>({
 		id: "",
 		bookId: "",
 		evangelizandoId: "",
@@ -32,8 +32,7 @@ export const BorrowCreating = () => {
 		e.preventDefault();
 	}
 
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const { name, value } = e.target;
+	const handleChange = (name: string, value: string | number | Array<string> | Array<number>) => {
 		setBorrow({ ...borrow, [name]: value });
 	};
 
@@ -56,7 +55,7 @@ export const BorrowCreating = () => {
 						isLoading={false}
 						handleSubmit={handleSubmit}
 						handleChange={handleChange}
-					></BorrowForm>
+					/>
 				</Box>
 			</Paper>
 		</Box>
